@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Taurodia RPG - Ficha</title>
+    <title>Taurodia RPG | Ficha Web</title>
     <style>
         body { background: #1a1a1a; color: #e0e0e0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         .container { width: 100%; max-width: 800px; background: #262626; padding: 25px; border: 2px solid #ff6600; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
@@ -12,14 +12,13 @@
         .field { display: flex; flex-direction: column; }
         .field label { font-size: 0.8rem; color: #ff6600; font-weight: bold; }
         input, textarea, select { background: #111; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px; margin-top: 5px; outline: none; }
-        input:focus, textarea:focus { border-color: #ffcc00; }
 
         .attributes { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
         .attr-box { text-align: center; background: #111; padding: 10px; border-radius: 4px; border: 1px solid #333; }
         .attr-box input { width: 45px; text-align: center; font-size: 1.2rem; border: none; background: transparent; }
 
         .roller-section { background: #111; padding: 15px; border-radius: 4px; border: 1px solid #ffcc00; margin-bottom: 20px; }
-        .roller-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; align-items: end; }
+        .roller-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: end; }
         
         #result-display { 
             background: #000; color: #00ff00; padding: 15px; border-left: 5px solid #ff6600; 
@@ -27,15 +26,12 @@
         }
 
         .text-areas { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        textarea { resize: vertical; min-height: 120px; font-family: inherit; }
+        textarea { resize: vertical; min-height: 120px; }
         
         .btn-group { display: flex; gap: 10px; margin-top: 20px; width: 100%; }
-        button { flex: 1; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; border: none; border-radius: 4px; transition: 0.2s; }
-        .btn-roll { background: #ff6600; color: black; }
+        button { flex: 1; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; border: none; border-radius: 4px; }
+        .btn-roll { background: #ff6600; color: black; margin-top: 10px; width: 100%; }
         .btn-save { background: #444; color: #ffcc00; border: 1px solid #ffcc00; }
-        button:hover { filter: brightness(1.2); }
-        
-        .save-notice { font-size: 0.7rem; color: #888; margin-top: 5px; text-align: center; }
     </style>
 </head>
 <body>
@@ -46,7 +42,7 @@
         <div class="field"><label>JOGADOR</label><input type="text" id="player-name"></div>
     </div>
 
-    <h2>Atributos Primordiais (Máx: 5)</h2>
+    <h2>Atributos (Máx: 5)</h2>
     <div class="attributes">
         <div class="attr-box"><label>FOR</label><br><input type="number" id="v-for" value="1" min="1" max="5"></div>
         <div class="attr-box"><label>AGI</label><br><input type="number" id="v-agi" value="1" min="1" max="5"></div>
@@ -56,25 +52,52 @@
         <div class="attr-box"><label>CAR</label><br><input type="number" id="v-car" value="1" min="1" max="5"></div>
     </div>
 
-    <h2>Painel de Perícias</h2>
+    <h2>Perícias</h2>
     <div class="roller-section">
         <div class="roller-grid">
-            <div class="field"><label>PERÍCIA</label><input type="text" id="skill-name" placeholder="Ex: Furtividade"></div>
             <div class="field">
-                <label>BÔNUS</label>
-                <select id="skill-attr">
-                    <option value="agi">AGI</option>
-                    <option value="for">FOR</option>
-                    <option value="int">INT</option>
-                    <option value="esp">ESP</option>
-                    <option value="car">CAR</option>
-                    <option value="vig">VIG</option>
+                <label>SELECIONE A PERÍCIA</label>
+                <select id="skill-sel">
+                    <option value="" selected disabled>Selecione a Perícia</option>
+                    <option value="agi" data-name="Furtividade">Furtividade (AGI)</option>
+                    <option value="agi" data-name="Prestidigitação">Prestidigitação (AGI)</option>
+                    <option value="for,agi" data-name="Luta">Luta (FOR+AGI)</option>
+                    <option value="esp" data-name="Misticismo">Misticismo (ESP)</option>
+                    <option value="esp,int" data-name="Arcanismo">Arcanismo (ESP+INT)</option>
+                    <option value="esp" data-name="Perseverança">Perseverança (ESP)</option>
+                    <option value="for,esp" data-name="Intimidação">Intimidação (FOR+ESP)</option>
+                    <option value="int" data-name="Escutar">Escutar (INT)</option>
+                    <option value="int" data-name="Procurar">Procurar (INT)</option>
+                    <option value="int" data-name="Tecnologia">Tecnologia (INT)</option>
+                    <option value="int" data-name="História">História (INT)</option>
+                    <option value="int" data-name="Idiomas">Idiomas (INT)</option>
+                    <option value="int" data-name="Atualidades">Atualidades (INT)</option>
+                    <option value="agi" data-name="Reflexo">Reflexo (AGI)</option>
+                    <option value="int" data-name="Pilotagem">Pilotagem (INT)</option>
+                    <option value="for" data-name="Resistência">Resistência (FOR)</option>
+                    <option value="agi" data-name="Esquiva">Esquiva (AGI)</option>
+                    <option value="int,esp" data-name="Memória">Memória (INT+ESP)</option>
+                    <option value="esp" data-name="Sorte">Sorte (ESP)</option>
+                    <option value="agi" data-name="Instinto">Instinto (AGI)</option>
+                    <option value="int" data-name="Medicina">Medicina (INT)</option>
+                    <option value="agi,for" data-name="Natação">Natação (AGI+FOR)</option>
+                    <option value="agi,for" data-name="Escalada">Escalada (AGI+FOR)</option>
+                    <option value="agi,for" data-name="Atletismo">Atletismo (AGI+FOR)</option>
+                    <option value="esp" data-name="FM/PC">FM/PC (ESP - d100)</option>
+                    <option value="car,int" data-name="Sedução">Sedução (CAR+INT)</option>
                 </select>
             </div>
-            <div class="field"><label>DADO</label><input type="number" id="dice-type" value="20"></div>
-            <button class="btn-roll" onclick="rollSkill()">ROLAR</button>
+            <div class="field">
+                <label>DADO (EX: 20)</label>
+                <input type="number" id="dice-type" value="20">
+            </div>
+            <div class="field">
+                <label>DADO PERSONALIZADO</label>
+                <input type="text" id="dice-custom" placeholder="Ex: 1d12">
+            </div>
         </div>
-        <div id="result-display">> Aguardando rolagem...</div>
+        <button class="btn-roll" onclick="rollSkill()">ROLAR DADOS</button>
+        <div id="result-display" readonly>> Resultado aparecerá aqui...</div>
     </div>
 
     <div class="text-areas">
@@ -83,30 +106,36 @@
     </div>
 
     <div class="field" style="margin-top: 15px;">
-        <label>ANOTAÇÕES GERAIS</label>
+        <label>ANOTAÇÕES</label>
         <textarea id="notes-text"></textarea>
     </div>
 
     <div class="btn-group">
-        <button class="btn-save" onclick="saveToUrl()">Sincronizar Dados na URL</button>
+        <button class="btn-save" onclick="saveToUrl()">Sincronizar na URL</button>
     </div>
-    <p class="save-notice">Após clicar em sincronizar, copie o link do seu navegador para salvar sua ficha.</p>
 </div>
 
 <script>
-    // Impedir valores maiores que 5 nos atributos [cite: 163]
+    // Trava de Atributos
     document.querySelectorAll('.attr-box input').forEach(input => {
         input.addEventListener('change', function() {
             if (this.value > 5) this.value = 5;
-            if (this.value < 1) this.value = 1;
+            if (this.value < 0) this.value = 0;
         });
     });
 
     function rollSkill() {
-        const name = document.getElementById('skill-name').value || "Teste";
-        const attrKeys = document.getElementById('skill-attr').value.split(',');
-        const diceBase = parseInt(document.getElementById('dice-type').value) || 20;
+        const select = document.getElementById('skill-sel');
+        const skillName = select.options[select.selectedIndex].getAttribute('data-name');
+        const attrKeys = select.value.split(',');
         
+        // Lógica de Dado (Prioriza o personalizado se preenchido)
+        let diceBase = parseInt(document.getElementById('dice-type').value) || 20;
+        const custom = document.getElementById('dice-custom').value;
+        if(custom.includes('d')) {
+            diceBase = parseInt(custom.split('d')[1]) || diceBase;
+        }
+
         let sumAttr = 0;
         attrKeys.forEach(k => {
             sumAttr += parseInt(document.getElementById('v-' + k.trim()).value) || 0;
@@ -114,10 +143,10 @@
 
         const roll = Math.floor(Math.random() * diceBase) + 1;
         const total = roll + sumAttr;
-        const maxPossible = diceBase + sumAttr; // [cite: 211]
+        const maxPossible = diceBase + sumAttr;
         const quality = (total / maxPossible) * 100;
 
-        let cat = ""; // Categorias oficiais [cite: 212-219]
+        let cat = "";
         if (quality <= 10) cat = "DESASTRE";
         else if (quality <= 20) cat = "FALHA";
         else if (quality <= 40) cat = "NORMAL";
@@ -127,9 +156,9 @@
         else cat = "EXCELENTE";
 
         document.getElementById('result-display').innerHTML = 
-            `> <strong>${name.toUpperCase()}</strong>\n` +
-            `> Resultado: ${roll} (d${diceBase}) + ${sumAttr} (Atributos) = <strong>${total}</strong>\n` +
-            `> Eficácia: ${quality.toFixed(1)}% | Sucesso: <strong>${cat}</strong>`;
+            `> <strong>${skillName.toUpperCase()}</strong>\n` +
+            `> Rolagem: ${roll} (d${diceBase}) + ${sumAttr} (Atal) = <strong>${total}</strong>\n` +
+            `> Sucesso: <strong>${cat}</strong> (${quality.toFixed(1)}%)`;
     }
 
     function saveToUrl() {
@@ -146,10 +175,9 @@
             bru: document.getElementById('bru-text').value,
             not: document.getElementById('notes-text').value
         };
-        
         const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
         window.history.replaceState(null, null, "?sheet=" + encoded);
-        alert("Ficha sincronizada com a URL! Copie o link do navegador para não perder seu progresso.");
+        alert("Ficha salva na URL!");
     }
 
     window.onload = () => {
@@ -169,7 +197,7 @@
                 document.getElementById('inv-text').value = d.inv || "";
                 document.getElementById('bru-text').value = d.bru || "";
                 document.getElementById('notes-text').value = d.not || "";
-            } catch(e) { console.error("Erro ao carregar dados da URL."); }
+            } catch(e) { console.error("Erro ao carregar URL"); }
         }
     };
 </script>
