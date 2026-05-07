@@ -21,6 +21,9 @@
         #resq-num { width: 60px; text-align: center; font-weight: bold; font-size: 1.1rem; }
         #resq-label-val { font-weight: bold; transition: color 0.3s; }
 
+        /* Dados Personalizados */
+        .dice-custom-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+
         /* Status Vitais */
         .status-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
         .status-box { background: #111; padding: 10px; border-radius: 4px; border: 1px solid #444; text-align: center; }
@@ -38,6 +41,8 @@
 
         .roller-section { background: #111; padding: 15px; border-radius: 4px; border: 1px solid #ffcc00; margin-bottom: 20px; }
         #result-display { background: #000; color: #00ff00; padding: 15px; border-left: 5px solid #ff6600; font-family: monospace; margin: 15px 0; white-space: pre-line; min-height: 50px; }
+
+        #custom-result-display { background: #000; color: #00ff00; padding: 15px; border-left: 5px solid #ff6600; font-family: monospace; margin: 15px 0; white-space: pre-line; min-height: 50px; }
 
         .text-areas { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         textarea { resize: vertical; min-height: 100px; }
@@ -96,12 +101,12 @@
             <div class="field">
                 <label>SELECIONE A PERÍCIA</label>
                 <select id="skill-sel">
-                    <option value="" selected disabled>Selecione uma perícia</option>
                     <option value="" data-name="Teste Puro">Nenhuma</option>
                     <option value="agi" data-name="Furtividade">Furtividade (AGI)</option>
                     <option value="agi" data-name="Prestidigitação">Prestidigitação (AGI)</option>
                     <option value="for,agi" data-name="Luta">Luta (FOR+AGI)</option>
                     <option value="esp" data-name="Misticismo">Misticismo (ESP)</option>
+                    <option value="car" data-name="Diplomacia">Diplomacia (CAR)</option>
                     <option value="esp,int" data-name="Arcanismo">Arcanismo (ESP+INT)</option>
                     <option value="esp" data-name="Perseverança">Perseverança (ESP)</option>
                     <option value="for,esp" data-name="Intimidação">Intimidação (FOR+ESP)</option>
@@ -135,14 +140,41 @@
         <div id="result-display">> Resultado aparecerá aqui...</div>
     </div>
 
+    <h2>Dados Personalizados</h2>
+    <div style="background: #111; padding: 15px; border-radius: 4px; border: 1px solid var(--amarelo);">
+        <div style="background: #111; padding: 15px; border-radius: 4px; border: 1px solid var(--amarelo);">
+            <div class="dice-custom-grid">
+                <div class="field">
+                    <label>QUANTIDADE</label>
+                    <input type="number" id="custom-qty" value="1" min="1">
+                </div>
+                <div class="field">
+                    <label>FACES</label>
+                    <input type="number" id="custom-faces" value="20" min="1">
+                </div>
+                <div class="field">
+                    <label>MODO</label>
+                    <select id="custom-mode">
+                        <option value="soma">Soma</option>
+                        <option value="vantagem">Vantagem (Maior)</option>
+                        <option value="desvantagem">Desvantagem (Menor)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-custom" onclick="rollCustomDice()">ROLAR DADOS</button>
+        </div>
+    </div>
+
+    <div id="custom-result-display">> Aguardando rolagem...</div>
+
     <div class="text-areas">
         <div class="field"><label>INVENTÁRIO</label><textarea id="inv-text" placeholder="Armas, elixires, armaduras, etc."></textarea></div>
-        <div class="field"><label>BRUXARIA</label><textarea id="bru-text" placeholder="Rituais e conhecimentos arcanos"></textarea></div>
+        <div class="field"><label>BRUXARIA</label><textarea id="bru-text" placeholder="Rituais e conhecimentos arcanos."></textarea></div>
     </div>
 
     <div class="field" style="margin-top: 15px;">
         <label>ANOTAÇÕES</label>
-        <textarea id="notes-text"></textarea>
+        <textarea id="notes-text" placeholder="Anotar coisas importantes ajudam a não se esquecer de pontos cruciais."></textarea>
     </div>
 
     <div class="btn-group">
@@ -151,6 +183,36 @@
 </div>
 
 <script>
+
+    function rollCustomDice() {
+        const qty = parseInt(document.getElementById('custom-qty').value) || 1;
+        const faces = parseInt(document.getElementById('custom-faces').value) || 20;
+        const mode = document.getElementById('custom-mode').value;
+        
+        let rolls = [];
+        for (let i = 0; i < qty; i++) {
+            rolls.push(Math.floor(Math.random() * faces) + 1);
+        }
+
+        let finalResult = 0;
+        let label = "";
+
+        if (mode === "soma") {
+            finalResult = rolls.reduce((a, b) => a + b, 0);
+            label = "SOMA";
+        } else if (mode === "vantagem") {
+            finalResult = Math.max(...rolls);
+            label = "VANTAGEM (MAIOR)";
+        } else {
+            finalResult = Math.min(...rolls);
+            label = "DESVANTAGEM (MENOR)";
+        }
+
+        document.getElementById('custom-result-display').innerHTML = 
+            `> <strong>${label}</strong>: ${finalResult}\n` +
+            `> Dados: [${rolls.join(', ')}] (d${faces})`;
+    }
+
     function updateResquicios(val) {
         val = Math.max(0, Math.min(100, val));
         document.getElementById('resq-slider').value = val;
@@ -176,20 +238,20 @@
         const getAttr = (id) => {
             let base = parseInt(document.getElementById('v-' + id).value) || 0;
             // Bônus de Resquícios aplicados ao cálculo de status
-            if (resq === 0 && (id === 'esp' || id === 'for')) base += 1;
-            if (resq === 100 && (id === 'vig' || id === 'car')) base += 1;
+            if (resq === 0 && (id === 'esp' || id === 'vig')) base += 1;
+            if (resq === 100 && (id === 'int' || id === 'car')) base += 1;
             return base;
         };
 
         const forca = getAttr('for');
-        const agi = getAttr('agi');
-        const int = getAttr('int');
-        const esp = getAttr('esp');
-        const vig = getAttr('vig');
-        const car = getAttr('car');
+        const agi   = getAttr('agi');
+        const int   = getAttr('int');
+        const esp   = getAttr('esp');
+        const vig   = getAttr('vig');
+        const car   = getAttr('car');
 
         // Novas fórmulas solicitadas
-        const maxHP = (vig * 15) + (forca);
+        const maxHP = (vig * 11) + (forca + 2);
         const maxFM = (esp) + (int * 2) + (car * 4);
         const maxPC = (agi + int + esp) * 2;
 
@@ -200,41 +262,56 @@
 
     function rollSkill() {
         const select = document.getElementById('skill-sel');
-        const skillName = select.options[select.selectedIndex].getAttribute('data-name');
+        const skillName = select.options[select.selectedIndex].getAttribute('data-name') || "Teste";
         const attrKeys = select.value ? select.value.split(',') : [];
         const resqVal = parseInt(document.getElementById('resq-num').value);
-        const diceBase = parseInt(document.getElementById('dice-type').value) || 20;
+        const diceBase = 20;
         
         function getAttr(key) {
             let base = parseInt(document.getElementById('v-' + key.trim()).value) || 0;
             if (resqVal === 0 && (key.trim() === 'esp' || key.trim() === 'for')) base += 1;
-            if (resqVal === 100 && (key.trim() === 'vig' || key.trim() === 'car')) base += 1;
+            if (resqVal === 100 && (key.trim() === 'int' || key.trim() === 'car')) base += 1;
             return base;
         }
 
-        let total, log, quality;
+        let total, log, quality, result, roll;
 
-        if (skillName === "FM/PC") {
-            const esp = getAttr('esp');
-            const main = Math.floor(Math.random() * 100) + 1;
-            let bonusSum = 0; let extraRolls = [];
-            for(let i=0; i<esp; i++) {
-                let r = Math.floor(Math.random() * 100) + 1;
-                extraRolls.push(r); bonusSum += r;
-            }
-            total = main + bonusSum;
-            log = `${main} + [${extraRolls.join('+') || 0}] (Dados extras de ESP)`;
-            quality = 100 - ((total / ((esp + 1) * 100)) * 100);
+        // Rolagem padrão para todas as perícias
+        roll = Math.floor(Math.random() * diceBase) + 1;
+        let sum = 0;
+        attrKeys.forEach(k => sum += getAttr(k) - 1);
+
+        total = (roll + sum);
+        log = `${roll} (d20) + ${sum} (Atributos)`;
+        
+        // Qualidade baseada no máximo possível (20 + Atributos)
+        quality = (total / (diceBase + sum)) * 100;
+
+        // Lógica de categoria baseada no valor do DADO PURO (roll)
+        if (total >= 1 && total <= 3) {
+            result = "💀 Desastre";
+        } else if (total >= 4 && total <= 6) {
+            result = "❌ Falha";
+        } else if (total >= 7 && total <= 10) {
+            result = "🟦 Simples";
+        } else if (total >= 11 && total <= 15) {
+            result = "👍 Normal";
+        } else if (total >= 16 && total <= 19) {
+            result = "😃 Bom";
+        } else if (total === 20) {
+            result = "<b>☄️ Excelente</b>";
+        // } else if (total >= 21 && total <= 25) {
+        //     result = "<b>☣️ Corrompido</b>";
+        // } else if (total >= 26 && total <= 30) {
+        //     result = "<b>💍 Casado</b>";
         } else {
-            const roll = Math.floor(Math.random() * diceBase) + 1;
-            let sum = 0;
-            attrKeys.forEach(k => sum += getAttr(k));
-            total = roll + sum;
-            log = `${roll} (d${diceBase}) + ${sum} (Atributos)`;
-            quality = (total / (diceBase + sum)) * 100;
+            result = "<b>🌌 Perfeito!</b>";
         }
 
-        document.getElementById('result-display').innerHTML = `> <strong>${skillName.toUpperCase()}</strong>: ${total} (${quality.toFixed(1)}%)\n> Detalhes: ${log}`;
+        document.getElementById('result-display').innerHTML = 
+            `> <strong>${skillName.toUpperCase()}</strong>: ${total} (${quality.toFixed(1)}%)\n` +
+            `> Detalhes: ${log}\n` +
+            `> Resultado: ${result}`;
     }
 
     function saveToUrl() {
