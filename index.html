@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Taurodia RPG | Ficha Web</title>
+    <title>Taurodia RPG</title>
     <style>
         body { background: #1a1a1a; color: #e0e0e0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         .container { width: 100%; max-width: 800px; background: #262626; padding: 25px; border: 2px solid #ff6600; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
@@ -125,18 +125,46 @@
         const select = document.getElementById('skill-sel');
         const skillName = select.options[select.selectedIndex].getAttribute('data-name');
         const attrKeys = select.value ? select.value.split(',') : [];
-        const diceBase = parseInt(document.getElementById('dice-type').value) || 20;
+        let diceBase = parseInt(document.getElementById('dice-type').value) || 20;
+        
+        let total = 0;
+        let rollLog = "";
+        let quality = 0;
 
-        let sumAttr = 0;
-        attrKeys.forEach(k => {
-            const val = document.getElementById('v-' + k.trim());
-            if (val) sumAttr += parseInt(val.value) || 0;
-        });
+        if (skillName === "FM/PC") {
+            // REGRA FM/PC: 1d100, Menor é melhor, ESP adiciona dados extras
+            diceBase = 100;
+            const espVal = parseInt(document.getElementById('v-esp').value) || 0;
+            const mainRoll = Math.floor(Math.random() * 100) + 1;
+            
+            let extraRolls = [];
+            let bonusSum = 0;
+            for(let i=0; i < espVal; i++) {
+                let r = Math.floor(Math.random() * 100) + 1;
+                extraRolls.push(r);
+                bonusSum += r;
+            }
+            
+            total = mainRoll + bonusSum;
+            rollLog = `${mainRoll} (d100) + [${extraRolls.join(' + ') || 0}] (Dados ESP)`;
+            
+            // Qualidade invertida para FM/PC: Total baixo = Eficácia Alta
+            // O máximo possível é (Quantidade de Dados * 100)
+            const maxVal = (espVal + 1) * 100;
+            quality = 100 - ((total / maxVal) * 100);
 
-        const roll = Math.floor(Math.random() * diceBase) + 1;
-        const total = roll + sumAttr;
-        const maxPossible = diceBase + sumAttr;
-        const quality = (total / maxPossible) * 100;
+        } else {
+            // ROLAGEM NORMAL: Maior é melhor
+            const roll = Math.floor(Math.random() * diceBase) + 1;
+            let sumAttr = 0;
+            attrKeys.forEach(k => {
+                const val = document.getElementById('v-' + k.trim());
+                if (val) sumAttr += parseInt(val.value) || 0;
+            });
+            total = roll + sumAttr;
+            rollLog = `${roll} (d${diceBase}) + ${sumAttr} (Atal)`;
+            quality = (total / (diceBase + sumAttr)) * 100;
+        }
 
         let cat = "";
         if (quality <= 10) cat = "DESASTRE";
@@ -149,7 +177,7 @@
 
         document.getElementById('result-display').innerHTML = 
             `> <strong>${skillName.toUpperCase()}</strong>\n` +
-            `> Rolagem: ${roll} (d${diceBase}) + ${sumAttr} (Atal) = <strong>${total}</strong>\n` +
+            `> Rolagem: ${rollLog} = <strong>${total}</strong>\n` +
             `> Sucesso: <strong>${cat}</strong> (${quality.toFixed(1)}%)`;
     }
 
@@ -169,7 +197,7 @@
         };
         const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
         window.history.replaceState(null, null, "?sheet=" + encoded);
-        alert("Ficha salva na URL!");
+        alert("Ficha salva na URL! Copie o link do navegador.");
     }
 
     window.onload = () => {
@@ -189,7 +217,7 @@
                 document.getElementById('inv-text').value = d.inv || "";
                 document.getElementById('bru-text').value = d.bru || "";
                 document.getElementById('notes-text').value = d.not || "";
-            } catch(e) { console.error("Erro ao carregar URL"); }
+            } catch(e) { console.error("Erro ao carregar dados."); }
         }
     };
 </script>
