@@ -13,24 +13,38 @@
         .field label { font-size: 0.8rem; color: #ff6600; font-weight: bold; }
         input, textarea, select { background: #111; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px; margin-top: 5px; outline: none; }
 
+        /* Resquícios */
+        .resquicios-container { background: #111; padding: 15px; border-radius: 4px; border: 1px solid #444; margin: 15px 0; }
+        .resquicios-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        #resq-slider { flex-grow: 1; cursor: pointer; accent-color: #ff6600; }
+        #resq-num { width: 60px; text-align: center; font-weight: bold; font-size: 1.1rem; }
+        #resq-label-val { font-weight: bold; transition: color 0.3s; }
+
+        /* Status Vitais */
+        .status-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .status-box { background: #111; padding: 10px; border-radius: 4px; border: 1px solid #444; text-align: center; }
+        .status-box label { font-size: 0.7rem; font-weight: bold; display: block; margin-bottom: 5px; }
+        .status-inputs { display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .status-inputs input { width: 50px; text-align: center; margin: 0; font-weight: bold; border: none; border-bottom: 1px solid #333; }
+        .max-val-display { font-weight: bold; color: #888; font-size: 1.1rem; }
+        .status-box.hp { border-left: 4px solid #ff3333; }
+        .status-box.fm { border-left: 4px solid #33ccff; }
+        .status-box.pc { border-left: 4px solid #cc33ff; }
+
         .attributes { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
         .attr-box { text-align: center; background: #111; padding: 10px; border-radius: 4px; border: 1px solid #333; }
         .attr-box input { width: 45px; text-align: center; font-size: 1.2rem; border: none; background: transparent; color: white; }
 
         .roller-section { background: #111; padding: 15px; border-radius: 4px; border: 1px solid #ffcc00; margin-bottom: 20px; }
-        .roller-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; align-items: end; }
-        
-        #result-display { 
-            background: #000; color: #00ff00; padding: 15px; border-left: 5px solid #ff6600; 
-            font-family: monospace; margin: 15px 0; min-height: 40px; white-space: pre-line; font-size: 0.9rem;
-        }
+        #result-display { background: #000; color: #00ff00; padding: 15px; border-left: 5px solid #ff6600; font-family: monospace; margin: 15px 0; white-space: pre-line; min-height: 50px; }
 
-        .text-areas { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        textarea { resize: vertical; min-height: 120px; }
+        .text-areas { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        textarea { resize: vertical; min-height: 100px; }
         
         .btn-group { display: flex; gap: 10px; margin-top: 20px; width: 100%; }
-        button { flex: 1; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; border: none; border-radius: 4px; }
-        .btn-roll { background: #ff6600; color: black; margin-top: 10px; width: 100%; }
+        button { flex: 1; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; border: none; border-radius: 4px; transition: 0.2s; }
+        button:hover { filter: brightness(1.2); }
+        .btn-roll { background: #ff6600; color: black; width: 100%; margin-top: 10px; }
         .btn-save { background: #444; color: #ffcc00; border: 1px solid #ffcc00; }
     </style>
 </head>
@@ -42,14 +56,37 @@
         <div class="field"><label>JOGADOR</label><input type="text" id="player-name" placeholder="Ex: avestruzdapernalisa"></div>
     </div>
 
+    <div class="resquicios-container">
+        <label style="font-size: 0.8rem; color: #ff6600; font-weight: bold;">RESQUÍCIOS: <span id="resq-label-val">50</span></label>
+        <div class="resquicios-controls">
+            <input type="range" id="resq-slider" min="0" max="100" value="50" oninput="updateResquicios(this.value)">
+            <input type="number" id="resq-num" min="0" max="100" value="50" oninput="updateResquicios(this.value)">
+        </div>
+    </div>
+
+    <div class="status-grid">
+        <div class="status-box hp">
+            <label style="color: #ff3333;">HP</label>
+            <div class="status-inputs"><input type="number" id="curr-hp"> / <span class="max-val-display" id="max_hp">0</span></div>
+        </div>
+        <div class="status-box fm">
+            <label style="color: #33ccff;">FM</label>
+            <div class="status-inputs"><input type="number" id="curr-fm"> / <span class="max-val-display" id="max_fm">0</span></div>
+        </div>
+        <div class="status-box pc">
+            <label style="color: #cc33ff;">PC</label>
+            <div class="status-inputs"><input type="number" id="curr-pc"> / <span class="max-val-display" id="max_pc">0</span></div>
+        </div>
+    </div>
+
     <h2>Atributos: 12 pontos</h2>
     <div class="attributes">
-        <div class="attr-box"><label>FOR</label><br><input type="number" id="v-for" value="1" min="1" max="5"></div>
-        <div class="attr-box"><label>AGI</label><br><input type="number" id="v-agi" value="1" min="1" max="5"></div>
-        <div class="attr-box"><label>VIG</label><br><input type="number" id="v-vig" value="1" min="1" max="5"></div>
-        <div class="attr-box"><label>INT</label><br><input type="number" id="v-int" value="1" min="1" max="5"></div>
-        <div class="attr-box"><label>ESP</label><br><input type="number" id="v-esp" value="1" min="1" max="5"></div>
-        <div class="attr-box"><label>CAR</label><br><input type="number" id="v-car" value="1" min="1" max="5"></div>
+        <div class="attr-box"><label>FOR</label><br><input type="number" id="v-for" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
+        <div class="attr-box"><label>AGI</label><br><input type="number" id="v-agi" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
+        <div class="attr-box"><label>VIG</label><br><input type="number" id="v-vig" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
+        <div class="attr-box"><label>INT</label><br><input type="number" id="v-int" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
+        <div class="attr-box"><label>ESP</label><br><input type="number" id="v-esp" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
+        <div class="attr-box"><label>CAR</label><br><input type="number" id="v-car" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
     </div>
 
     <h2>Perícias</h2>
@@ -113,78 +150,100 @@
 </div>
 
 <script>
-    // Trava de Atributos em 5
-    document.querySelectorAll('.attr-box input').forEach(input => {
-        input.addEventListener('change', function() {
-            if (this.value > 5) this.value = 5;
-            if (this.value < 0) this.value = 0;
-        });
-    });
+    function updateResquicios(val) {
+        val = Math.max(0, Math.min(100, val));
+        document.getElementById('resq-slider').value = val;
+        document.getElementById('resq-num').value = val;
+        const label = document.getElementById('resq-label-val');
+        label.innerText = val;
+        
+        let r, g, b;
+        if (val < 50) {
+            let ratio = val / 50;
+            r = 255; g = 255 * ratio; b = 255 * ratio;
+        } else {
+            let ratio = (val - 50) / 50;
+            r = 255; g = 255; b = 255 * (1 - ratio);
+        }
+        label.style.color = `rgb(${r}, ${g}, ${b})`;
+        atualizarStatus();
+    }
+
+    function atualizarStatus() {
+        const resq = parseInt(document.getElementById('resq-num').value);
+        
+        const getAttr = (id) => {
+            let base = parseInt(document.getElementById('v-' + id).value) || 0;
+            // Bônus de Resquícios aplicados ao cálculo de status
+            if (resq === 0 && (id === 'esp' || id === 'for')) base += 1;
+            if (resq === 100 && (id === 'vig' || id === 'car')) base += 1;
+            return base;
+        };
+
+        const forca = getAttr('for');
+        const agi = getAttr('agi');
+        const int = getAttr('int');
+        const esp = getAttr('esp');
+        const vig = getAttr('vig');
+        const car = getAttr('car');
+
+        // Novas fórmulas solicitadas
+        const maxHP = (vig * 15) + (forca);
+        const maxFM = (esp) + (int * 2) + (car * 4);
+        const maxPC = (agi + int + esp) * 2;
+
+        document.getElementById('max_hp').innerText = maxHP;
+        document.getElementById('max_fm').innerText = maxFM;
+        document.getElementById('max_pc').innerText = maxPC;
+    }
 
     function rollSkill() {
         const select = document.getElementById('skill-sel');
         const skillName = select.options[select.selectedIndex].getAttribute('data-name');
         const attrKeys = select.value ? select.value.split(',') : [];
-        let diceBase = parseInt(document.getElementById('dice-type').value) || 20;
+        const resqVal = parseInt(document.getElementById('resq-num').value);
+        const diceBase = parseInt(document.getElementById('dice-type').value) || 20;
         
-        let total = 0;
-        let rollLog = "";
-        let quality = 0;
-
-        if (skillName === "FM/PC") {
-            // REGRA FM/PC: 1d100, Menor é melhor, ESP adiciona dados extras
-            diceBase = 100;
-            const espVal = parseInt(document.getElementById('v-esp').value) || 0;
-            const mainRoll = Math.floor(Math.random() * 100) + 1;
-            
-            let extraRolls = [];
-            let bonusSum = 0;
-            for(let i=0; i < espVal; i++) {
-                let r = Math.floor(Math.random() * 100) + 1;
-                extraRolls.push(r);
-                bonusSum += r;
-            }
-            
-            total = mainRoll + bonusSum;
-            rollLog = `${mainRoll} (d100) + [${extraRolls.join(' + ') || 0}] (Dados ESP)`;
-            
-            // Qualidade invertida para FM/PC: Total baixo = Eficácia Alta
-            // O máximo possível é (Quantidade de Dados * 100)
-            const maxVal = (espVal + 1) * 100;
-            quality = 100 - ((total / maxVal) * 100);
-
-        } else {
-            // ROLAGEM NORMAL: Maior é melhor
-            const roll = Math.floor(Math.random() * diceBase) + 1;
-            let sumAttr = 0;
-            attrKeys.forEach(k => {
-                const val = document.getElementById('v-' + k.trim());
-                if (val) sumAttr += parseInt(val.value) || 0;
-            });
-            total = roll + sumAttr;
-            rollLog = `${roll} (d${diceBase}) + ${sumAttr} (Atal)`;
-            quality = (total / (diceBase + sumAttr)) * 100;
+        function getAttr(key) {
+            let base = parseInt(document.getElementById('v-' + key.trim()).value) || 0;
+            if (resqVal === 0 && (key.trim() === 'esp' || key.trim() === 'for')) base += 1;
+            if (resqVal === 100 && (key.trim() === 'vig' || key.trim() === 'car')) base += 1;
+            return base;
         }
 
-        let cat = "";
-        if (quality <= 10) cat = "DESASTRE";
-        else if (quality <= 20) cat = "FALHA";
-        else if (quality <= 40) cat = "NORMAL";
-        else if (quality <= 60) cat = "BÁSICO";
-        else if (quality <= 80) cat = "ACEITÁVEL";
-        else if (quality <= 90) cat = "ÓTIMO";
-        else cat = "EXCELENTE";
+        let total, log, quality;
 
-        document.getElementById('result-display').innerHTML = 
-            `> <strong>${skillName.toUpperCase()}</strong>\n` +
-            `> Rolagem: ${rollLog} = <strong>${total}</strong>\n` +
-            `> Sucesso: <strong>${cat}</strong> (${quality.toFixed(1)}%)`;
+        if (skillName === "FM/PC") {
+            const esp = getAttr('esp');
+            const main = Math.floor(Math.random() * 100) + 1;
+            let bonusSum = 0; let extraRolls = [];
+            for(let i=0; i<esp; i++) {
+                let r = Math.floor(Math.random() * 100) + 1;
+                extraRolls.push(r); bonusSum += r;
+            }
+            total = main + bonusSum;
+            log = `${main} + [${extraRolls.join('+') || 0}] (Dados extras de ESP)`;
+            quality = 100 - ((total / ((esp + 1) * 100)) * 100);
+        } else {
+            const roll = Math.floor(Math.random() * diceBase) + 1;
+            let sum = 0;
+            attrKeys.forEach(k => sum += getAttr(k));
+            total = roll + sum;
+            log = `${roll} (d${diceBase}) + ${sum} (Atributos)`;
+            quality = (total / (diceBase + sum)) * 100;
+        }
+
+        document.getElementById('result-display').innerHTML = `> <strong>${skillName.toUpperCase()}</strong>: ${total} (${quality.toFixed(1)}%)\n> Detalhes: ${log}`;
     }
 
     function saveToUrl() {
         const data = {
             cn: document.getElementById('char-name').value,
             pn: document.getElementById('player-name').value,
+            resq: document.getElementById('resq-num').value,
+            chp: document.getElementById('curr-hp').value,
+            cfm: document.getElementById('curr-fm').value,
+            cpc: document.getElementById('curr-pc').value,
             f: document.getElementById('v-for').value,
             a: document.getElementById('v-agi').value,
             v: document.getElementById('v-vig').value,
@@ -197,15 +256,15 @@
         };
         const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
         window.history.replaceState(null, null, "?sheet=" + encoded);
-        alert("Ficha salva na URL! Copie o link do navegador.");
+        alert("Ficha sincronizada com a URL!");
     }
 
     window.onload = () => {
         const params = new URLSearchParams(window.location.search);
-        const sheetData = params.get('sheet');
-        if (sheetData) {
+        const dataStr = params.get('sheet');
+        if (dataStr) {
             try {
-                const d = JSON.parse(decodeURIComponent(escape(atob(sheetData))));
+                const d = JSON.parse(decodeURIComponent(escape(atob(dataStr))));
                 document.getElementById('char-name').value = d.cn || "";
                 document.getElementById('player-name').value = d.pn || "";
                 document.getElementById('v-for').value = d.f || 1;
@@ -217,8 +276,15 @@
                 document.getElementById('inv-text').value = d.inv || "";
                 document.getElementById('bru-text').value = d.bru || "";
                 document.getElementById('notes-text').value = d.not || "";
+                updateResquicios(d.resq || 50);
+                document.getElementById('curr-hp').value = d.chp || 0;
+                document.getElementById('curr-fm').value = d.cfm || 0;
+                document.getElementById('curr-pc').value = d.cpc || 0;
             } catch(e) { console.error("Erro ao carregar dados."); }
+        } else {
+            updateResquicios(50);
         }
+        atualizarStatus();
     };
 </script>
 
