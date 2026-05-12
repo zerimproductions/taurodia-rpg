@@ -2,56 +2,237 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taurodia RPG</title>
     <link rel="icon" type="image/jpg" href="chifre.png">
     <style>
-        body { background: #1a1a1a; color: #e0e0e0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .container { width: 100%; max-width: 800px; background: #262626; padding: 25px; border: 2px solid #ff6600; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        h2 { color: #ffcc00; border-bottom: 1px solid #444; padding-bottom: 5px; text-transform: uppercase; font-size: 1.1rem; margin-top: 25px; }
-        
-        .grid-header { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        body { 
+            background: #1a1a1a; 
+            color: #e0e0e0; 
+            font-family: sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 10px;
+            margin: 0;
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 800px; 
+            margin: 0 auto;
+            background: #262626; 
+            padding: 15px; 
+            border: 2px solid #ff6600; 
+            border-radius: 8px; 
+            box-sizing: border-box;
+        }
+
+        h2 { 
+            color: #ffcc00; 
+            border-bottom: 1px solid #444; 
+            padding-bottom: 5px; 
+            text-transform: uppercase; 
+            font-size: 1.1rem; 
+            margin-top: 25px; 
+        }
+
+        .grid-header { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 15px; 
+            margin-bottom: 20px; 
+        }
+
+        @media (min-width: 600px) {
+            .grid-header { grid-template-columns: 1fr 1fr; }
+            .container { padding: 25px; }
+        }
+
         .field { display: flex; flex-direction: column; }
         .field label { font-size: 0.8rem; color: #ff6600; font-weight: bold; }
-        input, textarea, select { background: #111; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px; margin-top: 5px; outline: none; }
+        input, textarea, select { 
+            background: #111; 
+            border: 1px solid #444; 
+            color: white; 
+            padding: 12px; 
+            border-radius: 4px; 
+            margin-top: 5px; 
+            outline: none; 
+            font-size: 16px; 
+        }
 
-        /* Resquícios */
         .resquicios-container { background: #111; padding: 15px; border-radius: 4px; border: 1px solid #444; margin: 15px 0; }
         .resquicios-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
         #resq-slider { flex-grow: 1; cursor: pointer; accent-color: #ff6600; }
         #resq-num { width: 60px; text-align: center; font-weight: bold; font-size: 1.1rem; }
-        #resq-label-val { font-weight: bold; transition: color 0.3s; }
 
-        /* Dados Personalizados */
-        .dice-custom-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .status-grid { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 10px; 
+            margin-top: 15px; 
+        }
 
-        /* Status Vitais */
-        .status-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px; }
+        @media (min-width: 450px) {
+            .status-grid { grid-template-columns: 1fr 1fr 1fr; }
+        }
+
         .status-box { background: #111; padding: 10px; border-radius: 4px; border: 1px solid #444; text-align: center; }
-        .status-box label { font-size: 0.7rem; font-weight: bold; display: block; margin-bottom: 5px; }
         .status-inputs { display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .status-inputs input { width: 50px; text-align: center; margin: 0; font-weight: bold; border: none; border-bottom: 1px solid #333; }
-        .max-val-display { font-weight: bold; color: #888; font-size: 1.1rem; }
-        .status-box.hp { border-left: 4px solid #ff3333; }
-        .status-box.fm { border-left: 4px solid #33ccff; }
-        .status-box.pc { border-left: 4px solid #cc33ff; }
+        .status-inputs input { width: 60px; text-align: center; font-size: 1.1rem; }
 
-        .attributes { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; }
-        .attr-box { text-align: center; background: #111; padding: 10px; border-radius: 4px; border: 1px solid #333; }
-        .attr-box input { width: 45px; text-align: center; font-size: 1.2rem; border: none; background: transparent; color: white; }
+        .attributes { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        @media (min-width: 600px) {
+            .attributes { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (min-width: 800px) {
+            .attributes { grid-template-columns: repeat(6, 1fr); }
+        }
+
+        .attr-box { 
+            background: rgba(17, 17, 17, 0.8); 
+            padding: 15px 10px; 
+            border-radius: 12px; 
+            border: 1px solid #444;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .attr-box:hover {
+            border-color: #ff6600;
+            transform: translateY(-3px);
+        }
+
+        .attr-box label {
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: #bbb;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .attr-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 100px;
+        }
+
+        .attr-controls button {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid #ff6600;
+            background: transparent;
+            color: #ff6600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            padding: 0;
+        }
+
+        .attr-controls button:hover {
+            background: #ff6600;
+            color: #000;
+        }
+
+        .attr-controls input {
+            width: 30px;
+            background: transparent !important;
+            border: none !important;
+            color: #ffcc00 !important;
+            font-size: 1.4rem !important;
+            font-weight: bold;
+            padding: 0 !important;
+            margin: 0 !important;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+        }
+
+        .attr-controls input::-webkit-outer-spin-button,
+        .attr-controls input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* DEMAIS ESTILOS */
+        .roller-grid, .dice-custom-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 600px) { .dice-custom-grid { grid-template-columns: 1fr 1fr 1fr; } }
 
         .roller-section { background: #111; padding: 15px; border-radius: 4px; border: 1px solid #ffcc00; margin-bottom: 20px; }
-        #result-display { background: #000; color: #00ff00; padding: 15px; border-left: 5px solid #ff6600; font-family: monospace; margin: 15px 0; white-space: pre-line; min-height: 50px; }
+        #result-display, #custom-result-display { 
+            background: #000; 
+            color: #00ff00; 
+            padding: 15px; 
+            border-left: 5px solid #ff6600; 
+            font-family: monospace; 
+            margin: 15px 0; 
+            white-space: pre-line; 
+            min-height: 50px;
+            word-break: break-all; 
+        }
 
-        #custom-result-display { background: #000; color: #00ff00; padding: 15px; border-left: 5px solid #ff6600; font-family: monospace; margin: 15px 0; white-space: pre-line; min-height: 50px; }
+        .text-areas { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        @media (min-width: 600px) { .text-areas { grid-template-columns: 1fr 1fr; } }
 
-        .text-areas { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        textarea { resize: vertical; min-height: 100px; }
-        
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; width: 100%; }
-        button { flex: 1; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; border: none; border-radius: 4px; transition: 0.2s; }
-        button:hover { filter: brightness(1.2); }
-        .btn-roll { background: #ff6600; color: black; width: 100%; margin-top: 10px; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; width: 100%; }
+        button { padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; border: none; border-radius: 4px; }
+        .btn-roll, .btn-custom { background: #ff6600; color: black; width: 100%; margin-top: 10px; }
         .btn-save { background: #444; color: #ffcc00; border: 1px solid #ffcc00; }
+
+        .btn-fragmento {
+            background: #33ccff;
+            color: rgb(0, 0, 0);
+            width: 100%;
+            margin-top: 5px;
+            border: 1px solid #389ec0;
+            padding: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 4px;
+            transition: 0.1s;
+        }
+        .btn-fragmento:hover {
+            background: #2ba1c9;
+            transition: 0.2s;
+        }
+
+        /* Container da barra */
+        .status-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #000;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        /* Preenchimento da barra */
+        .status-bar-fill {
+            height: 100%;
+            width: 0%; /* Começa em 0, o JS controla */
+            transition: width 0.3s ease-in-out;
+        }
+
+        /* Cores específicas */
+        .bar-hp { background: #ff3333; box-shadow: 0 0 8px #ff3333; }
+        .bar-fm { background: #33ccff; box-shadow: 0 0 8px #33ccff; }
+        .bar-pc { background: #cc33ff; box-shadow: 0 0 8px #cc33ff; }
     </style>
 </head>
 <body>
@@ -60,6 +241,22 @@
     <div class="grid-header">
         <div class="field"><label>NOME DO PERSONAGEM</label><input type="text" id="char-name" placeholder="Ex: Gerson Romildo da Silva"></div>
         <div class="field"><label>JOGADOR</label><input type="text" id="player-name" placeholder="Ex: avestruzdapernalisa"></div>
+        
+        <div class="field">
+            <label>CLASSE</label>
+            <select id="char-class" onchange="updateSpecOptions(); atualizarStatus();">
+                <option value="nenhuma">Nenhuma</option>
+                <option value="sobrevivente">Sobrevivente</option>
+                <option value="guerreiro">Guerreiro</option>
+                <option value="arqueologo">Arqueólogo</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>ESPECIALIZAÇÃO</label>
+            <select id="char-spec" onchange="atualizarStatus()">
+                <option value="nenhuma">Selecione uma Classe primeiro</option>
+            </select>
+        </div>
     </div>
 
     <div class="resquicios-container">
@@ -73,26 +270,74 @@
     <div class="status-grid">
         <div class="status-box hp">
             <label style="color: #ff3333;">HP</label>
-            <div class="status-inputs"><input type="number" id="curr-hp"> / <span class="max-val-display" id="max_hp">0</span></div>
+            <div class="status-inputs"><input type="number" id="curr-hp" oninput="updateBars()"> / <span class="max-val-display" id="max_hp">0</span></div>
+            <div class="status-bar-container"><div id="bar-hp-fill" class="status-bar-fill bar-hp"></div></div>
         </div>
         <div class="status-box fm">
             <label style="color: #33ccff;">FM</label>
-            <div class="status-inputs"><input type="number" id="curr-fm"> / <span class="max-val-display" id="max_fm">0</span></div>
+            <div class="status-inputs"><input type="number" id="curr-fm" oninput="updateBars()"> / <span class="max-val-display" id="max_fm">0</span></div>
+            <div class="status-bar-container"><div id="bar-fm-fill" class="status-bar-fill bar-fm"></div></div>
         </div>
         <div class="status-box pc">
             <label style="color: #cc33ff;">PC</label>
-            <div class="status-inputs"><input type="number" id="curr-pc"> / <span class="max-val-display" id="max_pc">0</span></div>
+            <div class="status-inputs"><input type="number" id="curr-pc" oninput="updateBars()"> / <span class="max-val-display" id="max_pc">0</span></div>
+            <div class="status-bar-container"><div id="bar-pc-fill" class="status-bar-fill bar-pc"></div></div>
         </div>
     </div>
 
+    <button class="btn-fragmento" onclick="rollFragmentoMental()">🔮 FRAGMENTO MENTAL</button>
+    <div id="fragmento-display" style="display:none; background: #000; color: #33ccff; padding: 10px; border-left: 5px solid #33ccff; font-family: monospace; margin-top: 10px; margin-bottom: 20px;"></div>
+
     <h2>Atributos: 12 pontos</h2>
     <div class="attributes">
-        <div class="attr-box"><label>FOR</label><br><input type="number" id="v-for" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
-        <div class="attr-box"><label>AGI</label><br><input type="number" id="v-agi" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
-        <div class="attr-box"><label>VIG</label><br><input type="number" id="v-vig" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
-        <div class="attr-box"><label>INT</label><br><input type="number" id="v-int" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
-        <div class="attr-box"><label>ESP</label><br><input type="number" id="v-esp" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
-        <div class="attr-box"><label>CAR</label><br><input type="number" id="v-car" value="1" min="1" max="5" onchange="atualizarStatus()"></div>
+        <div class="attr-box">
+            <label>FOR</label>
+            <div class="attr-controls">
+                <button onclick="changeAttr('for', -1)">-</button>
+                <input type="number" id="v-for" value="1" min="1" max="5" readonly>
+                <button onclick="changeAttr('for', 1)">+</button>
+            </div>
+        </div>
+        <div class="attr-box">
+            <label>AGI</label>
+            <div class="attr-controls">
+                <button onclick="changeAttr('agi', -1)">-</button>
+                <input type="number" id="v-agi" value="1" min="1" max="5" readonly>
+                <button onclick="changeAttr('agi', 1)">+</button>
+            </div>
+        </div>
+        <div class="attr-box">
+            <label>VIG</label>
+            <div class="attr-controls">
+                <button onclick="changeAttr('vig', -1)">-</button>
+                <input type="number" id="v-vig" value="1" min="1" max="5" readonly>
+                <button onclick="changeAttr('vig', 1)">+</button>
+            </div>
+        </div>
+        <div class="attr-box">
+            <label>INT</label>
+            <div class="attr-controls">
+                <button onclick="changeAttr('int', -1)">-</button>
+                <input type="number" id="v-int" value="1" min="1" max="5" readonly>
+                <button onclick="changeAttr('int', 1)">+</button>
+            </div>
+        </div>
+        <div class="attr-box">
+            <label>ESP</label>
+            <div class="attr-controls">
+                <button onclick="changeAttr('esp', -1)">-</button>
+                <input type="number" id="v-esp" value="1" min="1" max="5" readonly>
+                <button onclick="changeAttr('esp', 1)">+</button>
+            </div>
+        </div>
+        <div class="attr-box">
+            <label>CAR</label>
+            <div class="attr-controls">
+                <button onclick="changeAttr('car', -1)">-</button>
+                <input type="number" id="v-car" value="1" min="1" max="5" readonly>
+                <button onclick="changeAttr('car', 1)">+</button>
+            </div>
+        </div>
     </div>
 
     <h2>Perícias</h2>
@@ -112,6 +357,7 @@
                     <option value="for,esp" data-name="Intimidação">Intimidação (FOR+ESP)</option>
                     <option value="int" data-name="Escutar">Escutar (INT)</option>
                     <option value="int" data-name="Procurar">Procurar (INT)</option>
+                    <option value="esp" data-name="Olfato">Olfato (ESP)</option>
                     <option value="int" data-name="Tecnologia">Tecnologia (INT)</option>
                     <option value="int" data-name="História">História (INT)</option>
                     <option value="int" data-name="Idiomas">Idiomas (INT)</option>
@@ -127,13 +373,8 @@
                     <option value="agi,for" data-name="Natação">Natação (AGI+FOR)</option>
                     <option value="agi,for" data-name="Escalada">Escalada (AGI+FOR)</option>
                     <option value="agi,for" data-name="Atletismo">Atletismo (AGI+FOR)</option>
-                    <option value="esp" data-name="FM/PC">FM/PC (ESP)</option>
                     <option value="car,int" data-name="Sedução">Sedução (CAR+INT)</option>
                 </select>
-            </div>
-            <div class="field">
-                <label>DADO (EX: 20)</label>
-                <input type="number" id="dice-type" value="20">
             </div>
         </div>
         <button class="btn-roll" onclick="rollSkill()">ROLAR DADOS</button>
@@ -141,28 +382,36 @@
     </div>
 
     <h2>Dados Personalizados</h2>
-    <div style="background: #111; padding: 15px; border-radius: 4px; border: 1px solid var(--amarelo);">
-        <div style="background: #111; padding: 15px; border-radius: 4px; border: 1px solid var(--amarelo);">
-            <div class="dice-custom-grid">
-                <div class="field">
-                    <label>QUANTIDADE</label>
-                    <input type="number" id="custom-qty" value="1" min="1">
-                </div>
-                <div class="field">
-                    <label>FACES</label>
-                    <input type="number" id="custom-faces" value="20" min="1">
-                </div>
-                <div class="field">
-                    <label>MODO</label>
-                    <select id="custom-mode">
-                        <option value="soma">Soma</option>
-                        <option value="vantagem">Vantagem (Maior)</option>
-                        <option value="desvantagem">Desvantagem (Menor)</option>
-                    </select>
-                </div>
+    <div style="background: #111; padding: 15px; border-radius: 4px; border: 1px solid #ffcc00; margin-bottom: 10px;">
+        <div class="dice-custom-grid">
+            <div class="field">
+                <label>QUANTIDADE</label>
+                <input type="number" id="custom-qty" value="1" min="1">
             </div>
-            <button class="btn-custom" onclick="rollCustomDice()">ROLAR DADOS</button>
+            <div class="field">
+                <label>FACES</label>
+                <select id="custom-faces">
+                    <option value="2">d2</option>
+                    <option value="4">d4</option>
+                    <option value="6">d6</option>
+                    <option value="8">d8</option>
+                    <option value="10">d10</option>
+                    <option value="12">d12</option>
+                    <option value="20" selected>d20</option>
+                    <option value="50">d50</option>
+                    <option value="100">d100</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>MODO</label>
+                <select id="custom-mode">
+                    <option value="soma">Soma</option>
+                    <option value="vantagem">Vantagem (Maior)</option>
+                    <option value="desvantagem">Desvantagem (Menor)</option>
+                </select>
+            </div>
         </div>
+        <button class="btn-custom" onclick="rollCustomDice()">ROLAR DADOS</button>
     </div>
 
     <div id="custom-result-display">> Aguardando rolagem...</div>
@@ -184,29 +433,151 @@
 
 <script>
 
+    const specsPorClasse = {
+        sobrevivente: [
+            { val: "contrabandista", nome: "Contrabandista" },
+            { val: "explorador", nome: "Explorador" },
+            { val: "viajante", nome: "Viajante" },
+            { val: "campista", nome: "Campista" },
+            { val: "estudioso", nome: "Estudioso" }
+        ],
+        guerreiro: [
+            { val: "barbaro", nome: "Bárbaro" },
+            { val: "besta", nome: "Besta" },
+            { val: "esgrimista", nome: "Esgrimista" },
+            { val: "cauteloso", nome: "Cauteloso" },
+            { val: "tanque", nome: "Tanque" },
+            { val: "manipulador", nome: "Manipulador" },
+            { val: "agil", nome: "Ágil" }
+        ],
+        arqueologo: [
+            { val: "estudioso", nome: "Estudioso" },
+            { val: "feiticeiro", nome: "Feiticeiro" },
+            { val: "mago", nome: "Mago" },
+            { val: "paleontologo", nome: "Paleontólogo" },
+            { val: "clerigo", nome: "Clérigo" },
+            { val: "domino", nome: "Dominó" }
+        ]
+    };
+
+    function updateResquicios(val) {
+        val = Math.max(0, Math.min(100, val));
+        document.getElementById('resq-slider').value = val;
+        document.getElementById('resq-num').value = val;
+        const label = document.getElementById('resq-label-val');
+        label.innerText = val;
+
+        // Lógica de cor (mantida)
+        let r, g, b;
+        if (val < 50) { let ratio = val / 50; r = 255; g = 255 * ratio; b = 255 * ratio; }
+        else { let ratio = (val - 50) / 50; r = 255; g = 255; b = 255 * (1 - ratio); }
+        label.style.color = `rgb(${r}, ${g}, ${b})`;
+
+        // Atualiza as opções de especialização baseada no novo valor
+        updateSpecOptions(); 
+        atualizarStatus();
+    }
+
+    function updateSpecOptions() {
+        const classe = document.getElementById('char-class').value;
+        const resq = parseInt(document.getElementById('resq-num').value);
+        const specSelect = document.getElementById('char-spec');
+        const specField = specSelect.parentElement; // Pega a div class="field" que contém o select
+
+        // Verifica a trava de Resquícios (Esconde se estiver entre 26 e 64)
+        if (resq > 25 && resq < 65) {
+            specField.style.display = 'none'; // Esconde o campo inteiro (label + select)
+            
+            // Reseta o valor para não manter bônus de uma especialização escondida
+            if (specSelect.value !== "nenhuma") {
+                specSelect.value = "nenhuma";
+                atualizarStatus();
+            }
+            return; 
+        }
+
+        // Se estiver fora da zona de bloqueio, mostra o campo
+        specField.style.display = 'flex'; 
+        
+        // Limpa e preenche as opções
+        specSelect.innerHTML = '<option value="nenhuma">Nenhuma</option>';
+        if (specsPorClasse[classe]) {
+            specsPorClasse[classe].forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.val;
+                opt.innerHTML = s.nome;
+                specSelect.appendChild(opt);
+            });
+        }
+    }
+
+    function updateBars() {
+        const stats = ['hp', 'fm', 'pc'];
+        
+        stats.forEach(stat => {
+            const curr = parseInt(document.getElementById(`curr-${stat}`).value) || 0;
+            const max = parseInt(document.getElementById(`max_${stat}`).innerText) || 1;
+            const bar = document.getElementById(`bar-${stat}-fill`);
+            
+            let percentage = (curr / max) * 100;
+            percentage = Math.max(0, Math.min(100, percentage)); // Limita entre 0 e 100
+            
+            bar.style.width = percentage + "%";
+        });
+    }
+
+    function changeAttr(attr, delta) {
+        const input = document.getElementById('v-' + attr);
+        let val = parseInt(input.value) || 1;
+        val += delta;
+        if (val >= 1 && val <= 5) {
+            input.value = val;
+            atualizarStatus();
+        }
+    }
+
+    function rollFragmentoMental() {
+        const espBase = parseInt(document.getElementById('v-esp').value) || 1;
+        const resqVal = parseInt(document.getElementById('resq-num').value);
+        let espTotal = espBase;
+        if (resqVal === 0) espTotal += 1;
+
+        const dado = Math.floor(Math.random() * 100) + 1;
+        const redutor = (espTotal - 1) * 10;
+        let resultadoFinal = dado - redutor;
+        if (resultadoFinal < 1) resultadoFinal = 1;
+
+        // Lógica de resultados (Menor é melhor)
+        let classificacao = "";
+        if (resultadoFinal <= 5) classificacao = "<b>🌌 Perfeito!</b>";
+        else if (resultadoFinal <= 20) classificacao = "<b>☄️ Excelente</b>";
+        else if (resultadoFinal <= 40) classificacao = "😃 Bom";
+        else if (resultadoFinal <= 60) classificacao = "👍 Normal";
+        else if (resultadoFinal <= 80) classificacao = "🟦 Simples";
+        else if (resultadoFinal <= 95) classificacao = "❌ Falha";
+        else classificacao = "💀 Desastre";
+
+        const display = document.getElementById('fragmento-display');
+        display.style.display = 'block';
+        display.innerHTML = `> <strong>FRAGMENTO MENTAL</strong><br>` +
+                            `> Dado: ${dado} (d100)<br>` +
+                            `> Redutor (ESP ${espTotal}): -${redutor}<br>` +
+                            `> Resultado Final: <strong>${resultadoFinal}</strong><br>` +
+                            `> Classificação: ${classificacao}<br>` +
+                            `<small>(Nesta rolagem, quanto menor o valor, melhor o resultado!)</small>`;
+    }
+
     function rollCustomDice() {
         const qty = parseInt(document.getElementById('custom-qty').value) || 1;
         const faces = parseInt(document.getElementById('custom-faces').value) || 20;
         const mode = document.getElementById('custom-mode').value;
-        
         let rolls = [];
-        for (let i = 0; i < qty; i++) {
-            rolls.push(Math.floor(Math.random() * faces) + 1);
-        }
+        for (let i = 0; i < qty; i++) { rolls.push(Math.floor(Math.random() * faces) + 1); }
 
-        let finalResult = 0;
-        let label = "";
-
-        if (mode === "soma") {
-            finalResult = rolls.reduce((a, b) => a + b, 0);
-            label = "SOMA";
-        } else if (mode === "vantagem") {
-            finalResult = Math.max(...rolls);
-            label = "VANTAGEM (MAIOR)";
-        } else {
-            finalResult = Math.min(...rolls);
-            label = "DESVANTAGEM (MENOR)";
-        }
+        let finalResult = 0, label = "";
+        if (mode === "soma") { finalResult = rolls.reduce((a, b) => a + b, 0); label = "SOMA"; }
+        else if (mode === "vantagem") { finalResult = Math.max(...rolls); label = "VANTAGEM (MAIOR)"; }
+        else { finalResult = Math.min(...rolls); label = "DESVANTAGEM (MENOR)"; }
 
         document.getElementById('custom-result-display').innerHTML = 
             `> <strong>${label}</strong>: ${finalResult}\n` +
@@ -219,103 +590,213 @@
         document.getElementById('resq-num').value = val;
         const label = document.getElementById('resq-label-val');
         label.innerText = val;
-        
         let r, g, b;
-        if (val < 50) {
-            let ratio = val / 50;
-            r = 255; g = 255 * ratio; b = 255 * ratio;
-        } else {
-            let ratio = (val - 50) / 50;
-            r = 255; g = 255; b = 255 * (1 - ratio);
-        }
+        if (val < 50) { let ratio = val / 50; r = 255; g = 255 * ratio; b = 255 * ratio; }
+        else { let ratio = (val - 50) / 50; r = 255; g = 255; b = 255 * (1 - ratio); }
         label.style.color = `rgb(${r}, ${g}, ${b})`;
         atualizarStatus();
     }
 
     function atualizarStatus() {
         const resq = parseInt(document.getElementById('resq-num').value);
-        
+        const charClass = document.getElementById('char-class').value;
+        const charSpec = document.getElementById('char-spec').value;
+        const notesField = document.getElementById('notes-text');
+
+        // Reset de anotações automáticas (preserva o que o user escreveu antes)
+        let extraNotes = [];
+
+        // Atributos Base
         const getAttr = (id) => {
-            let base = parseInt(document.getElementById('v-' + id).value) || 0;
-            // Bônus de Resquícios aplicados ao cálculo de status
-            if (resq === 0 && (id === 'esp' || id === 'vig')) base += 1;
-            if (resq === 100 && (id === 'int' || id === 'car')) base += 1;
-            return base;
+            let val = parseInt(document.getElementById('v-' + id).value) || 0;
+            if (resq === 0 && (id === 'esp' || id === 'vig')) val += 1;
+            if (resq === 100 && (id === 'int' || id === 'car')) val += 1;
+            
+            // Bónus de Classe nos Atributos
+            if (charClass === 'sobrevivente' && id === 'agi') val += 1;
+            if (charClass === 'guerreiro' && id === 'for') val += 1;
+            if (charClass === 'arqueologo' && id === 'int') val += 1;
+
+            // Bónus de Especialização nos Atributos
+            if (charSpec === 'contrabandista' && id === 'agi') val += 1;
+            if (charSpec === 'explorador' && id === 'agi') val += 1;
+            if (charSpec === 'viajante' && id === 'agi') val += 1;
+            if (charSpec === 'campista' && id === 'car') val += 1;
+            if (charSpec === 'estudioso' && id === 'int') val += 2;
+            if (charSpec === 'barbaro') { if(id==='for') val+=1; if(id==='esp') val+=1; if(id==='int') val-=1; }
+            if (charSpec === 'besta') { if(id==='for') val+=2; if(id==='int') val-=2; }
+            if (charSpec === 'esgrimista') { if(id==='int') val+=1; if(id==='agi') val+=1; }
+            if (charSpec === 'cauteloso' && id === 'agi') val += 2;
+            if (charSpec === 'tanque' && id === 'vig') val += 2;
+            if (charSpec === 'manipulador') { if(id==='int') val+=1; if(id==='for') val-=1; if(id==='esp') val-=1; }
+            if (charSpec === 'agil') { if(id==='agi') val+=2; if(id==='for') val-=1; }
+            if (charSpec === 'feiticeiro' && id === 'esp') val += 2;
+            if (charSpec === 'mago') { if(id==='int') val+=1; if(id==='esp') val+=1; }
+            if (charSpec === 'paleontologo' && id === 'int') val += 1;
+            if (charSpec === 'clerigo') { if(id==='esp') val+=1; if(id==='car') val+=1; }
+            if (charSpec === 'domino' && id === 'car') val += 2;
+
+            return val;
         };
 
-        const forca = getAttr('for');
-        const agi   = getAttr('agi');
-        const int   = getAttr('int');
-        const esp   = getAttr('esp');
-        const vig   = getAttr('vig');
-        const car   = getAttr('car');
+        const forca = getAttr('for'), agi = getAttr('agi'), int = getAttr('int'), 
+            esp = getAttr('esp'), vig = getAttr('vig'), car = getAttr('car');
 
-        // Novas fórmulas solicitadas
-        const maxHP = (vig * 11) + (forca + 2);
-        const maxFM = (esp) + (int * 2) + (car * 4);
-        const maxPC = (agi + int + esp) * 2;
+        let maxHP = (vig * 11) + (forca + 2);
+        let maxFM = (esp) + (int * 2) + (car * 4);
+        let maxPC = (agi + int + esp) * 2;
+
+        // Bónus de Status Fixos
+        if (charClass === 'sobrevivente') { 
+            maxFM += 6; 
+            extraNotes.push("Sobrevivente: vasto conhecimento sobre a natureza");
+        }
+        if (charClass === 'guerreiro') { 
+            maxHP += 10; 
+            extraNotes.push("Guerreiro: um cara bom de briga");
+        }
+        if (charClass === 'arqueologo') {
+            extraNotes.push("Arqueólogo: pessoa curiosa, grande entusiasta da História do mundo desde os primórdios");
+        }
+
+        // Bónus de Especialização nos Status
+        if (charSpec === 'explorador') maxFM += 5;
+        if (charSpec === 'viajante') {
+            maxFM += 6;
+            extraNotes.push("Especialização: Viajante: pode viajar entre as 6 Muralhas livremente com autorização dos governantes");
+        }
+        if (charSpec === 'campista') maxHP -= 5;
+        if (charSpec === 'estudioso') maxFM += 5;
+        if (charSpec === 'barbaro') maxHP += 10;
+        if (charSpec === 'besta') maxHP += 5;
+        if (charSpec === 'esgrimista') maxFM += 8;
+        if (charSpec === 'tanque') maxFM += 10;
+        if (charSpec === 'agil') maxHP -= 10;
+        if (charSpec === 'feiticeiro') { maxFM += 5; maxPC += 10; }
+        if (charSpec === 'mago') maxPC += 5;
+        if (charSpec === 'paleontologo') {
+            extraNotes.push("Especialização: Paleontólogo: sabe tudo sobre aquelas criaturas fora das Muralhas");
+        }
+        if (charSpec === 'clerigo') { maxPC += 5; maxFM += 5; }
 
         document.getElementById('max_hp').innerText = maxHP;
         document.getElementById('max_fm').innerText = maxFM;
         document.getElementById('max_pc').innerText = maxPC;
+
+        // Atualizar Anotações (lógica simples para não duplicar notas automáticas)
+        let currentNotes = notesField.value.split('\n').filter(line => !line.startsWith("Sobrevivente:") && !line.startsWith("Guerreiro:") && !line.startsWith("Arqueólogo:") && !line.startsWith("Especialização:"));
+        notesField.value = extraNotes.concat(currentNotes).join('\n');
+
+        updateBars();
     }
 
     function rollSkill() {
         const select = document.getElementById('skill-sel');
+        const skillVal = select.value; // ex: "agi" ou "for,agi"
         const skillName = select.options[select.selectedIndex].getAttribute('data-name') || "Teste";
-        const attrKeys = select.value ? select.value.split(',') : [];
+        const charClass = document.getElementById('char-class').value;
+        const charSpec = document.getElementById('char-spec').value;
         const resqVal = parseInt(document.getElementById('resq-num').value);
         const diceBase = 20;
+
+        // --- LÓGICA DE QUANTIDADE DE DADOS (VANTAGEM) ---
+        let numDados = 1;
+
+        // Regra Arqueólogo: Todos os dados de INT rodam 2x
+        if (charClass === 'arqueologo' && skillVal.includes('int')) {
+            numDados = 2;
+        }
+
+        // Regras de Especialização (2x ou 3x)
+        if (charSpec === 'contrabandista' && skillName === 'Furtividade') numDados = 2;
+        if (charSpec === 'esgrimista' && skillName === 'Luta') numDados = 2;
+        if (charSpec === 'mago' && skillName === 'Arcanismo') numDados = 2;
         
+        if (charSpec === 'cauteloso') {
+            if (skillName === 'Furtividade') numDados = 3;
+            if (skillName === 'Perseverança') numDados = 2;
+        }
+        
+        if (charSpec === 'manipulador' && (skillName === 'Furtividade' || skillName === 'Diplomacia')) numDados = 3;
+        if (charSpec === 'agil' && skillName === 'Esquiva') numDados = 3;
+        if (charSpec === 'estudioso' && (skillName === 'Medicina' || skillName === 'História')) numDados = 3;
+        if (charSpec === 'feiticeiro' && skillName === 'Misticismo') numDados = 3;
+        if (charSpec === 'clerigo' && skillName === 'Medicina') numDados = 3;
+        if (charSpec === 'domino' && skillName === 'Sorte') numDados = 3;
+
+        if (charSpec === 'campista') {
+            const campLista = ['Procurar', 'Escutar', 'Olfato', 'Sorte', 'Medicina', 'Prestidigitação', 'Instinto'];
+            if (campLista.includes(skillName)) numDados = 2;
+        }
+
+        // --- EXECUÇÃO DA ROLAGEM ---
+        let rolls = [];
+        for (let i = 0; i < numDados; i++) {
+            rolls.push(Math.floor(Math.random() * diceBase) + 1);
+        }
+        
+        // Pega o melhor resultado entre os dados rolados
+        let roll = Math.max(...rolls);
+
+        // --- CÁLCULO DOS ATRIBUTOS (Incluindo bônus de classe/espec/resquício) ---
         function getAttr(key) {
             let base = parseInt(document.getElementById('v-' + key.trim()).value) || 0;
-            if (resqVal === 0 && (key.trim() === 'esp' || key.trim() === 'for')) base += 1;
+            
+            // Bônus de Resquício
+            if (resqVal === 0 && (key.trim() === 'esp' || key.trim() === 'for' || key.trim() === 'vig')) base += 1;
             if (resqVal === 100 && (key.trim() === 'int' || key.trim() === 'car')) base += 1;
+            
+            // Bônus de Classe
+            if (charClass === 'sobrevivente' && key.trim() === 'agi') base += 1;
+            if (charClass === 'guerreiro' && key.trim() === 'for') base += 1;
+            if (charClass === 'arqueologo' && key.trim() === 'int') base += 1;
+
+            // Bônus de Especialização (Exemplos principais)
+            if (charSpec === 'contrabandista' && key.trim() === 'agi') base += 1;
+            if (charSpec === 'explorador' && key.trim() === 'agi') base += 1;
+            if (charSpec === 'viajante' && key.trim() === 'agi') base += 1;
+            if (charSpec === 'campista' && key.trim() === 'car') base += 1;
+            if (charSpec === 'estudioso' && key.trim() === 'int') base += 2;
+            if (charSpec === 'barbaro' && (key.trim() === 'for' || key.trim() === 'esp')) base += 1;
+            if (charSpec === 'besta' && key.trim() === 'for') base += 2;
+            if (charSpec === 'tanque' && key.trim() === 'vig') base += 2;
+            // Adicione outros bônus de atributo de especialização aqui se necessário
+
             return base;
         }
 
-        let total, log, quality, result, roll;
-
-        // Rolagem padrão para todas as perícias
-        roll = Math.floor(Math.random() * diceBase) + 1;
+        const attrKeys = skillVal ? skillVal.split(',') : [];
         let sum = 0;
-        attrKeys.forEach(k => sum += getAttr(k) - 1);
+        attrKeys.forEach(k => {
+            sum += (getAttr(k) - 1);
+        });
 
-        total = (roll + sum);
-        log = `${roll} (d20) + ${sum} (Atributos)`;
+        let total = (roll + sum);
+        let quality = (total / (diceBase + sum)) * 100;
+        let result = "";
+
+        // --- TABELA DE RESULTADOS ---
+        if (total <= 3) result = "💀 Desastre";
+        else if (total <= 6) result = "❌ Falha";
+        else if (total <= 10) result = "🟦 Simples";
+        else if (total <= 15) result = "👍 Normal";
+        else if (total <= 19) result = "😃 Bom";
+        else if (total === 20) result = "<b>☄️ Excelente</b>";
+        else result = "<b>🌌 Perfeito!</b>";
+
+        // --- EXIBIÇÃO ---
+        const dadosTxt = numDados > 1 ? `[${rolls.join(', ')}] (Melhor: ${roll})` : `${roll}`;
         
-        // Qualidade baseada no máximo possível (20 + Atributos)
-        quality = (total / (diceBase + sum)) * 100;
-
-        // Lógica de categoria baseada no valor do DADO PURO (roll)
-        if (total >= 1 && total <= 3) {
-            result = "💀 Desastre";
-        } else if (total >= 4 && total <= 6) {
-            result = "❌ Falha";
-        } else if (total >= 7 && total <= 10) {
-            result = "🟦 Simples";
-        } else if (total >= 11 && total <= 15) {
-            result = "👍 Normal";
-        } else if (total >= 16 && total <= 19) {
-            result = "😃 Bom";
-        } else if (total === 20) {
-            result = "<b>☄️ Excelente</b>";
-        // } else if (total >= 21 && total <= 25) {
-        //     result = "<b>☣️ Corrompido</b>";
-        // } else if (total >= 26 && total <= 30) {
-        //     result = "<b>💍 Casado</b>";
-        } else {
-            result = "<b>🌌 Perfeito!</b>";
-        }
-
         document.getElementById('result-display').innerHTML = 
             `> <strong>${skillName.toUpperCase()}</strong>: ${total} (${quality.toFixed(1)}%)\n` +
-            `> Detalhes: ${log}\n` +
+            `> Dados: ${dadosTxt} (d20) + ${sum} (Soma Attr)\n` +
             `> Resultado: ${result}`;
     }
 
     function saveToUrl() {
         const data = {
+            cls: document.getElementById('char-class').value,
+            spc: document.getElementById('char-spec').value,
             cn: document.getElementById('char-name').value,
             pn: document.getElementById('player-name').value,
             resq: document.getElementById('resq-num').value,
@@ -343,6 +824,8 @@
         if (dataStr) {
             try {
                 const d = JSON.parse(decodeURIComponent(escape(atob(dataStr))));
+                document.getElementById('char-class').value = d.cls || "nenhuma";
+                document.getElementById('char-spec').value = d.spc || "nenhuma";
                 document.getElementById('char-name').value = d.cn || "";
                 document.getElementById('player-name').value = d.pn || "";
                 document.getElementById('v-for').value = d.f || 1;
@@ -359,9 +842,7 @@
                 document.getElementById('curr-fm').value = d.cfm || 0;
                 document.getElementById('curr-pc').value = d.cpc || 0;
             } catch(e) { console.error("Erro ao carregar dados."); }
-        } else {
-            updateResquicios(50);
-        }
+        } else { updateResquicios(50); }
         atualizarStatus();
     };
 </script>
