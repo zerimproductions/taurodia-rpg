@@ -288,13 +288,13 @@
     <button class="btn-fragmento" onclick="rollFragmentoMental()">🔮 FRAGMENTO MENTAL</button>
     <div id="fragmento-display" style="display:none; background: #000; color: #33ccff; padding: 10px; border-left: 5px solid #33ccff; font-family: monospace; margin-top: 10px; margin-bottom: 20px;"></div>
 
-    <h2>Atributos: 12 pontos</h2>
+    <h2>Atributos: 10 pontos</h2>
     <div class="attributes">
         <div class="attr-box">
             <label>FOR</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('for', -1)">-</button>
-                <input type="number" id="v-for" value="1" min="1" max="5" readonly>
+                <input type="number" id="v-for" value="1" min="1" max="4" readonly>
                 <button onclick="changeAttr('for', 1)">+</button>
             </div>
         </div>
@@ -302,7 +302,7 @@
             <label>AGI</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('agi', -1)">-</button>
-                <input type="number" id="v-agi" value="1" min="1" max="5" readonly>
+                <input type="number" id="v-agi" value="1" min="1" max="4" readonly>
                 <button onclick="changeAttr('agi', 1)">+</button>
             </div>
         </div>
@@ -310,7 +310,7 @@
             <label>VIG</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('vig', -1)">-</button>
-                <input type="number" id="v-vig" value="1" min="1" max="5" readonly>
+                <input type="number" id="v-vig" value="1" min="1" max="4" readonly>
                 <button onclick="changeAttr('vig', 1)">+</button>
             </div>
         </div>
@@ -318,7 +318,7 @@
             <label>INT</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('int', -1)">-</button>
-                <input type="number" id="v-int" value="1" min="1" max="5" readonly>
+                <input type="number" id="v-int" value="1" min="1" max="4" readonly>
                 <button onclick="changeAttr('int', 1)">+</button>
             </div>
         </div>
@@ -326,7 +326,7 @@
             <label>ESP</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('esp', -1)">-</button>
-                <input type="number" id="v-esp" value="1" min="1" max="5" readonly>
+                <input type="number" id="v-esp" value="1" min="1" max="4" readonly>
                 <button onclick="changeAttr('esp', 1)">+</button>
             </div>
         </div>
@@ -334,7 +334,7 @@
             <label>CAR</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('car', -1)">-</button>
-                <input type="number" id="v-car" value="1" min="1" max="5" readonly>
+                <input type="number" id="v-car" value="1" min="1" max="4" readonly>
                 <button onclick="changeAttr('car', 1)">+</button>
             </div>
         </div>
@@ -351,12 +351,12 @@
                     <option value="agi" data-name="Prestidigitação">Prestidigitação (AGI)</option>
                     <option value="for,agi" data-name="Luta">Luta (FOR+AGI)</option>
                     <option value="esp" data-name="Misticismo">Misticismo (ESP)</option>
-                    <option value="car" data-name="Diplomacia">Diplomacia (CAR)</option>
                     <option value="esp,int" data-name="Arcanismo">Arcanismo (ESP+INT)</option>
+                    <option value="car" data-name="Diplomacia">Diplomacia (CAR)</option>
                     <option value="esp" data-name="Perseverança">Perseverança (ESP)</option>
                     <option value="for,esp" data-name="Intimidação">Intimidação (FOR+ESP)</option>
-                    <option value="int" data-name="Escutar">Escutar (INT)</option>
-                    <option value="int" data-name="Procurar">Procurar (INT)</option>
+                    <option value="int" data-name="Escutar">Audição (INT)</option>
+                    <option value="int" data-name="Procurar">Visão (INT)</option>
                     <option value="esp" data-name="Olfato">Olfato (ESP)</option>
                     <option value="int" data-name="Tecnologia">Tecnologia (INT)</option>
                     <option value="int" data-name="História">História (INT)</option>
@@ -439,7 +439,8 @@
             { val: "explorador", nome: "Explorador" },
             { val: "viajante", nome: "Viajante" },
             { val: "campista", nome: "Campista" },
-            { val: "estudioso", nome: "Estudioso" }
+            { val: "estudioso", nome: "Estudioso" },
+            { val: "domino", nome: "Dominó" },
         ],
         guerreiro: [
             { val: "barbaro", nome: "Bárbaro" },
@@ -448,7 +449,7 @@
             { val: "cauteloso", nome: "Cauteloso" },
             { val: "tanque", nome: "Tanque" },
             { val: "manipulador", nome: "Manipulador" },
-            { val: "agil", nome: "Ágil" }
+            { val: "agil", nome: "Ágil" },
         ],
         arqueologo: [
             { val: "estudioso", nome: "Estudioso" },
@@ -456,7 +457,6 @@
             { val: "mago", nome: "Mago" },
             { val: "paleontologo", nome: "Paleontólogo" },
             { val: "clerigo", nome: "Clérigo" },
-            { val: "domino", nome: "Dominó" }
         ]
     };
 
@@ -528,9 +528,9 @@
 
     function changeAttr(attr, delta) {
         const input = document.getElementById('v-' + attr);
-        let val = parseInt(input.value) || 1;
+        let val = parseInt(input.value) || 0;
         val += delta;
-        if (val >= 1 && val <= 5) {
+        if (val >= 0 && val <= 3) {
             input.value = val;
             atualizarStatus();
         }
@@ -565,6 +565,7 @@
                             `> Resultado Final: <strong>${resultadoFinal}</strong><br>` +
                             `> Classificação: ${classificacao}<br>` +
                             `<small>(Nesta rolagem, quanto menor o valor, melhor o resultado!)</small>`;
+        setTimeout(() => { display.style.display = 'none'; }, 5000);
     }
 
     function rollCustomDice() {
@@ -642,20 +643,21 @@
         const forca = getAttr('for'), agi = getAttr('agi'), int = getAttr('int'), 
             esp = getAttr('esp'), vig = getAttr('vig'), car = getAttr('car');
 
-        let maxHP = (vig * 11) + (forca + 2);
-        let maxFM = (esp) + (int * 2) + (car * 4);
-        let maxPC = (agi + int + esp) * 2;
+        let maxHP = (((vig + (forca / 2)) * 8) + 5);
+        let maxFM = ((esp) + (int * 2) + (car * 5));
+        let maxPC = ((agi + (int + esp) * 2) * 3);
 
         // Bónus de Status Fixos
         if (charClass === 'sobrevivente') { 
-            maxFM += 6; 
+            maxFM += int + esp; 
             extraNotes.push("Sobrevivente: vasto conhecimento sobre a natureza");
         }
         if (charClass === 'guerreiro') { 
-            maxHP += 10; 
+            maxHP += forca * 2; 
             extraNotes.push("Guerreiro: um cara bom de briga");
         }
         if (charClass === 'arqueologo') {
+            maxPC += int; 
             extraNotes.push("Arqueólogo: pessoa curiosa, grande entusiasta da História do mundo desde os primórdios");
         }
 
@@ -665,15 +667,21 @@
             maxFM += 6;
             extraNotes.push("Especialização: Viajante: pode viajar entre as 6 Muralhas livremente com autorização dos governantes");
         }
-        if (charSpec === 'campista') maxHP -= 5;
+        if (charSpec === 'campista') maxHP -= forca - 2;
         if (charSpec === 'estudioso') maxFM += 5;
         if (charSpec === 'barbaro') maxHP += 10;
         if (charSpec === 'besta') maxHP += 5;
         if (charSpec === 'esgrimista') maxFM += 8;
         if (charSpec === 'tanque') maxFM += 10;
         if (charSpec === 'agil') maxHP -= 10;
-        if (charSpec === 'feiticeiro') { maxFM += 5; maxPC += 10; }
-        if (charSpec === 'mago') maxPC += 5;
+        if (charSpec === 'feiticeiro') { 
+            maxFM += 5; maxPC += 10;
+            extraNotes.push("Especialização: Feiticeiro: conectado com o mundo místico, pessoa que conjura magias com seu espírito aguçado");
+        }
+        if (charSpec === 'mago') {
+            maxPC += 5;
+            extraNotes.push("Especialização: Mago: um estudioso das artes arcanas, que utiliza seu conhecimento para manipular as forças ocultas do mundo");
+        }
         if (charSpec === 'paleontologo') {
             extraNotes.push("Especialização: Paleontólogo: sabe tudo sobre aquelas criaturas fora das Muralhas");
         }
@@ -683,7 +691,6 @@
         document.getElementById('max_fm').innerText = maxFM;
         document.getElementById('max_pc').innerText = maxPC;
 
-        // Atualizar Anotações (lógica simples para não duplicar notas automáticas)
         let currentNotes = notesField.value.split('\n').filter(line => !line.startsWith("Sobrevivente:") && !line.startsWith("Guerreiro:") && !line.startsWith("Arqueólogo:") && !line.startsWith("Especialização:"));
         notesField.value = extraNotes.concat(currentNotes).join('\n');
 
