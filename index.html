@@ -169,7 +169,6 @@
             margin: 0;
         }
 
-        /* DEMAIS ESTILOS */
         .roller-grid, .dice-custom-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         @media (min-width: 600px) { .dice-custom-grid { grid-template-columns: 1fr 1fr 1fr; } }
 
@@ -211,7 +210,6 @@
             transition: 0.2s;
         }
 
-        /* Container da barra */
         .status-bar-container {
             width: 100%;
             height: 8px;
@@ -222,20 +220,18 @@
             border: 1px solid #444;
         }
 
-        /* Preenchimento da barra */
         .status-bar-fill {
             height: 100%;
-            width: 0%; /* Começa em 0, o JS controla */
+            width: 0%; 
             transition: width 0.3s ease-in-out;
         }
 
-        /* Cores específicas */
         .bar-hp { background: #ff3333; box-shadow: 0 0 8px #ff3333; }
         .bar-fm { background: #33ccff; box-shadow: 0 0 8px #33ccff; }
         .bar-pc { background: #cc33ff; box-shadow: 0 0 8px #cc33ff; }
     </style>
 </head>
-<body>
+<body onload="updateSpecOptions()">
 
 <div class="container">
     <div class="grid-header">
@@ -249,6 +245,7 @@
                 <option value="sobrevivente">Sobrevivente</option>
                 <option value="guerreiro">Guerreiro</option>
                 <option value="arqueologo">Arqueólogo</option>
+                <option value="cientista">Cientista</option>
             </select>
         </div>
         <div class="field">
@@ -270,17 +267,17 @@
     <div class="status-grid">
         <div class="status-box hp">
             <label style="color: #ff3333;">HP</label>
-            <div class="status-inputs"><input type="number" id="curr-hp" oninput="updateBars()"> / <span class="max-val-display" id="max_hp">0</span></div>
+            <div class="status-inputs"><input type="number" id="curr-hp" oninput="updateBars()"> / <span class="max-val-display" id="max_hp">20</span></div>
             <div class="status-bar-container"><div id="bar-hp-fill" class="status-bar-fill bar-hp"></div></div>
         </div>
         <div class="status-box fm">
             <label style="color: #33ccff;">FM</label>
-            <div class="status-inputs"><input type="number" id="curr-fm" oninput="updateBars()"> / <span class="max-val-display" id="max_fm">0</span></div>
+            <div class="status-inputs"><input type="number" id="curr-fm" oninput="updateBars()"> / <span class="max-val-display" id="max_fm">10</span></div>
             <div class="status-bar-container"><div id="bar-fm-fill" class="status-bar-fill bar-fm"></div></div>
         </div>
         <div class="status-box pc">
             <label style="color: #cc33ff;">PC</label>
-            <div class="status-inputs"><input type="number" id="curr-pc" oninput="updateBars()"> / <span class="max-val-display" id="max_pc">0</span></div>
+            <div class="status-inputs"><input type="number" id="curr-pc" oninput="updateBars()"> / <span class="max-val-display" id="max_pc">15</span></div>
             <div class="status-bar-container"><div id="bar-pc-fill" class="status-bar-fill bar-pc"></div></div>
         </div>
     </div>
@@ -288,13 +285,13 @@
     <button class="btn-fragmento" onclick="rollFragmentoMental()">🔮 FRAGMENTO MENTAL</button>
     <div id="fragmento-display" style="display:none; background: #000; color: #33ccff; padding: 10px; border-left: 5px solid #33ccff; font-family: monospace; margin-top: 10px; margin-bottom: 20px;"></div>
 
-    <h2>Atributos: 10 pontos</h2>
+    <h2 id="attr-title">Atributos: 10 pontos</h2>
     <div class="attributes">
         <div class="attr-box">
             <label>FOR</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('for', -1)">-</button>
-                <input type="number" id="v-for" value="1" min="1" max="4" readonly>
+                <input type="number" id="v-for" value="0" min="0" max="3" readonly>
                 <button onclick="changeAttr('for', 1)">+</button>
             </div>
         </div>
@@ -302,7 +299,7 @@
             <label>AGI</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('agi', -1)">-</button>
-                <input type="number" id="v-agi" value="1" min="1" max="4" readonly>
+                <input type="number" id="v-agi" value="0" min="0" max="3" readonly>
                 <button onclick="changeAttr('agi', 1)">+</button>
             </div>
         </div>
@@ -310,7 +307,7 @@
             <label>VIG</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('vig', -1)">-</button>
-                <input type="number" id="v-vig" value="1" min="1" max="4" readonly>
+                <input type="number" id="v-vig" value="0" min="0" max="3" readonly>
                 <button onclick="changeAttr('vig', 1)">+</button>
             </div>
         </div>
@@ -318,7 +315,7 @@
             <label>INT</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('int', -1)">-</button>
-                <input type="number" id="v-int" value="1" min="1" max="4" readonly>
+                <input type="number" id="v-int" value="0" min="0" max="3" readonly>
                 <button onclick="changeAttr('int', 1)">+</button>
             </div>
         </div>
@@ -326,7 +323,7 @@
             <label>ESP</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('esp', -1)">-</button>
-                <input type="number" id="v-esp" value="1" min="1" max="4" readonly>
+                <input type="number" id="v-esp" value="0" min="0" max="3" readonly>
                 <button onclick="changeAttr('esp', 1)">+</button>
             </div>
         </div>
@@ -334,7 +331,7 @@
             <label>CAR</label>
             <div class="attr-controls">
                 <button onclick="changeAttr('car', -1)">-</button>
-                <input type="number" id="v-car" value="1" min="1" max="4" readonly>
+                <input type="number" id="v-car" value="0" min="0" max="3" readonly>
                 <button onclick="changeAttr('car', 1)">+</button>
             </div>
         </div>
@@ -432,7 +429,7 @@
 </div>
 
 <script>
-
+    const MAX_POINTS = 10;
     const specsPorClasse = {
         sobrevivente: [
             { val: "contrabandista", nome: "Contrabandista" },
@@ -441,6 +438,9 @@
             { val: "campista", nome: "Campista" },
             { val: "estudioso", nome: "Estudioso" },
             { val: "domino", nome: "Dominó" },
+            { val: "eremita", nome: "Eremita" },
+            { val: "cacador", nome: "Caçador" },
+            { val: "guia", nome: "Guia das Sombras" }
         ],
         guerreiro: [
             { val: "barbaro", nome: "Bárbaro" },
@@ -450,6 +450,9 @@
             { val: "tanque", nome: "Tanque" },
             { val: "manipulador", nome: "Manipulador" },
             { val: "agil", nome: "Ágil" },
+            { val: "gladiador", nome: "Gladiador" },
+            { val: "carrasco", nome: "Carrasco" },
+            { val: "duelista", nome: "Duelista Arcano" }
         ],
         arqueologo: [
             { val: "estudioso", nome: "Estudioso" },
@@ -457,8 +460,20 @@
             { val: "mago", nome: "Mago" },
             { val: "paleontologo", nome: "Paleontólogo" },
             { val: "clerigo", nome: "Clérigo" },
+            { val: "tradutor", nome: "Tradutor de Runas" },
+            { val: "curador", nome: "Curador de Relíquias" },
+            { val: "profeta", nome: "Profeta do Passado" }
+        ],
+        cientista: [
+            { val: "alquimista", nome: "Alquimista" },
+            { val: "engenheiro", nome: "Engenheiro de Cerco" },
+            { val: "medico", nome: "Médico de Campo" },
+            { val: "inventor", nome: "Inventor" },
+            { val: "biologo", nome: "Biólogo Viral" }
         ]
     };
+
+    // --- FUNÇÕES DE INTERFACE ---
 
     function updateResquicios(val) {
         val = Math.max(0, Math.min(100, val));
@@ -467,13 +482,11 @@
         const label = document.getElementById('resq-label-val');
         label.innerText = val;
 
-        // Lógica de cor (mantida)
         let r, g, b;
         if (val < 50) { let ratio = val / 50; r = 255; g = 255 * ratio; b = 255 * ratio; }
         else { let ratio = (val - 50) / 50; r = 255; g = 255; b = 255 * (1 - ratio); }
         label.style.color = `rgb(${r}, ${g}, ${b})`;
 
-        // Atualiza as opções de especialização baseada no novo valor
         updateSpecOptions(); 
         atualizarStatus();
     }
@@ -482,24 +495,20 @@
         const classe = document.getElementById('char-class').value;
         const resq = parseInt(document.getElementById('resq-num').value);
         const specSelect = document.getElementById('char-spec');
-        const specField = specSelect.parentElement; // Pega a div class="field" que contém o select
+        const specField = specSelect.parentElement;
 
-        // Verifica a trava de Resquícios (Esconde se estiver entre 26 e 64)
+        // Se estiver na zona neutra de resquícios, a especialização é desabilitada
         if (resq > 25 && resq < 65) {
-            specField.style.display = 'none'; // Esconde o campo inteiro (label + select)
-            
-            // Reseta o valor para não manter bônus de uma especialização escondida
-            if (specSelect.value !== "nenhuma") {
-                specSelect.value = "nenhuma";
-                atualizarStatus();
-            }
+            specField.style.display = 'none';
+            specSelect.value = "nenhuma";
             return; 
         }
 
-        // Se estiver fora da zona de bloqueio, mostra o campo
         specField.style.display = 'flex'; 
         
-        // Limpa e preenche as opções
+        // IMPORTANTE: Salva o valor que já estava selecionado antes de reconstruir a lista
+        const valorAntigo = specSelect.value;
+
         specSelect.innerHTML = '<option value="nenhuma">Nenhuma</option>';
         if (specsPorClasse[classe]) {
             specsPorClasse[classe].forEach(s => {
@@ -509,19 +518,19 @@
                 specSelect.appendChild(opt);
             });
         }
+
+        // Tenta restaurar o valor antigo (se ele ainda existir na nova lista)
+        if (valorAntigo && valorAntigo !== "") {
+            specSelect.value = valorAntigo;
+        }
     }
 
     function updateBars() {
-        const stats = ['hp', 'fm', 'pc'];
-        
-        stats.forEach(stat => {
+        ['hp', 'fm', 'pc'].forEach(stat => {
             const curr = parseInt(document.getElementById(`curr-${stat}`).value) || 0;
             const max = parseInt(document.getElementById(`max_${stat}`).innerText) || 1;
             const bar = document.getElementById(`bar-${stat}-fill`);
-            
-            let percentage = (curr / max) * 100;
-            percentage = Math.max(0, Math.min(100, percentage)); // Limita entre 0 e 100
-            
+            let percentage = Math.max(0, Math.min(100, (curr / max) * 100));
             bar.style.width = percentage + "%";
         });
     }
@@ -529,43 +538,83 @@
     function changeAttr(attr, delta) {
         const input = document.getElementById('v-' + attr);
         let val = parseInt(input.value) || 0;
-        val += delta;
-        if (val >= 0 && val <= 3) {
-            input.value = val;
-            atualizarStatus();
-        }
+        let totalGasto = 0;
+        ['for','agi','vig','int','esp','car'].forEach(a => totalGasto += parseInt(document.getElementById('v-'+a).value) || 0);
+
+        if (delta > 0 && totalGasto < MAX_POINTS && val < 3) input.value = val + 1;
+        else if (delta < 0 && val > 0) input.value = val - 1;
+        
+        updatePointsLabel();
+        atualizarStatus();
     }
 
-    function rollFragmentoMental() {
-        const espBase = parseInt(document.getElementById('v-esp').value) || 1;
-        const resqVal = parseInt(document.getElementById('resq-num').value);
-        let espTotal = espBase;
-        if (resqVal === 0) espTotal += 1;
+    function updatePointsLabel() {
+        let totalGasto = 0;
+        ['for','agi','vig','int','esp','car'].forEach(a => totalGasto += parseInt(document.getElementById('v-'+a).value) || 0);
+        document.getElementById('attr-title').innerText = `Atributos: ${MAX_POINTS - totalGasto} pontos`;
+    }
 
-        const dado = Math.floor(Math.random() * 100) + 1;
-        const redutor = (espTotal - 1) * 10;
-        let resultadoFinal = dado - redutor;
-        if (resultadoFinal < 1) resultadoFinal = 1;
+    function atualizarStatus() {
+        const resq = parseInt(document.getElementById('resq-num').value);
+        const charClass = document.getElementById('char-class').value;
+        const charSpec = document.getElementById('char-spec').value;
+        
+        const getAttr = (id) => {
+            let val = parseInt(document.getElementById('v-' + id).value) || 0;
+            if (resq === 0 && (id === 'esp' || id === 'vig')) val += 1;
+            if (resq === 100 && (id === 'int' || id === 'car')) val += 1;
+            if (charClass === 'sobrevivente' && id === 'agi') val += 1;
+            if (charClass === 'guerreiro' && id === 'for') val += 1;
+            if (charClass === 'arqueologo' && id === 'int') val += 1;
+            if (charClass === 'cientista' && id === 'int') val += 1;
+            if (charSpec === 'contrabandista' && id === 'agi') val += 1;
+            if (charSpec === 'estudioso' && id === 'int') val += 2;
+            if (charSpec === 'tanque' && id === 'vig') val += 2;
+            return val;
+        };
 
-        // Lógica de resultados (Menor é melhor)
-        let classificacao = "";
-        if (resultadoFinal <= 5) classificacao = "<b>🌌 Perfeito!</b>";
-        else if (resultadoFinal <= 20) classificacao = "<b>☄️ Excelente</b>";
-        else if (resultadoFinal <= 40) classificacao = "😃 Bom";
-        else if (resultadoFinal <= 60) classificacao = "👍 Normal";
-        else if (resultadoFinal <= 80) classificacao = "🟦 Simples";
-        else if (resultadoFinal <= 95) classificacao = "❌ Falha";
-        else classificacao = "💀 Desastre";
+        const f = getAttr('for'), a = getAttr('agi'), i = getAttr('int'), e = getAttr('esp'), v = getAttr('vig'), c = getAttr('car');
 
-        const display = document.getElementById('fragmento-display');
-        display.style.display = 'block';
-        display.innerHTML = `> <strong>FRAGMENTO MENTAL</strong><br>` +
-                            `> Dado: ${dado} (d100)<br>` +
-                            `> Redutor (ESP ${espTotal}): -${redutor}<br>` +
-                            `> Resultado Final: <strong>${resultadoFinal}</strong><br>` +
-                            `> Classificação: ${classificacao}<br>` +
-                            `<small>(Nesta rolagem, quanto menor o valor, melhor o resultado!)</small>`;
-        setTimeout(() => { display.style.display = 'none'; }, 5000);
+        let maxHP = 8 + ((v + (f / 2)) * 8);
+        let maxFM = 5 + (e + (i * 2) + (c * 5));
+        let maxPC = 2 + ((a + (i + e) * 2) * 3);
+
+        if (charClass === 'sobrevivente') maxFM += i + e;
+        if (charClass === 'guerreiro') maxHP += f * 2;
+        if (charSpec === 'barbaro') maxHP += 10;
+
+        document.getElementById('max_hp').innerText = Math.floor(maxHP);
+        document.getElementById('max_fm').innerText = Math.floor(maxFM);
+        document.getElementById('max_pc').innerText = Math.floor(maxPC);
+        updateBars();
+    }
+
+    // --- ROLAGENS ---
+
+    function rollSkill() {
+        const select = document.getElementById('skill-sel');
+        const skillVal = select.value; 
+        const skillName = select.options[select.selectedIndex].getAttribute('data-name') || "Teste";
+        const diceBase = 50;
+
+        let roll = Math.floor(Math.random() * diceBase) + 1;
+        const attrKeys = skillVal ? skillVal.split(',') : [];
+        let sum = 0;
+        attrKeys.forEach(k => {
+            sum += parseInt(document.getElementById('v-' + k.trim()).value) || 0;
+        });
+
+        let total = roll + sum;
+        let result = "";
+        if (total <= 7) result = "💀 Desastre";
+        else if (total <= 15) result = "❌ Falha";
+        else if (total <= 25) result = "😥 Quase";
+        else if (total <= 37) result = "👍 Normal";
+        else if (total <= 47) result = "😃 Bom";
+        else if (total === 50) result = "<b>☄️ Excelente</b>";
+        else result = "<b>🌌 Perfeito!</b>";
+
+        document.getElementById('result-display').innerHTML = `> <strong>${skillName.toUpperCase()}</strong>: ${total}\n> Dado: ${roll} + Mod: ${sum}\n> Resultado: ${result}`;
     }
 
     function rollCustomDice() {
@@ -573,239 +622,22 @@
         const faces = parseInt(document.getElementById('custom-faces').value) || 20;
         const mode = document.getElementById('custom-mode').value;
         let rolls = [];
-        for (let i = 0; i < qty; i++) { rolls.push(Math.floor(Math.random() * faces) + 1); }
+        for (let i = 0; i < qty; i++) rolls.push(Math.floor(Math.random() * faces) + 1);
 
-        let finalResult = 0, label = "";
-        if (mode === "soma") { finalResult = rolls.reduce((a, b) => a + b, 0); label = "SOMA"; }
-        else if (mode === "vantagem") { finalResult = Math.max(...rolls); label = "VANTAGEM (MAIOR)"; }
-        else { finalResult = Math.min(...rolls); label = "DESVANTAGEM (MENOR)"; }
+        let finalResult = (mode === "soma") ? rolls.reduce((a, b) => a + b, 0) : 
+                         (mode === "vantagem") ? Math.max(...rolls) : Math.min(...rolls);
 
-        document.getElementById('custom-result-display').innerHTML = 
-            `> <strong>${label}</strong>: ${finalResult}\n` +
-            `> Dados: [${rolls.join(', ')}] (d${faces})`;
+        document.getElementById('custom-result-display').innerHTML = `> Resultado: ${finalResult}\n> Dados: [${rolls.join(', ')}]`;
     }
 
-    function updateResquicios(val) {
-        val = Math.max(0, Math.min(100, val));
-        document.getElementById('resq-slider').value = val;
-        document.getElementById('resq-num').value = val;
-        const label = document.getElementById('resq-label-val');
-        label.innerText = val;
-        let r, g, b;
-        if (val < 50) { let ratio = val / 50; r = 255; g = 255 * ratio; b = 255 * ratio; }
-        else { let ratio = (val - 50) / 50; r = 255; g = 255; b = 255 * (1 - ratio); }
-        label.style.color = `rgb(${r}, ${g}, ${b})`;
-        atualizarStatus();
-    }
-
-    function atualizarStatus() {
-        const resq = parseInt(document.getElementById('resq-num').value);
-        const charClass = document.getElementById('char-class').value;
-        const charSpec = document.getElementById('char-spec').value;
-        const notesField = document.getElementById('notes-text');
-
-        // Reset de anotações automáticas (preserva o que o user escreveu antes)
-        let extraNotes = [];
-
-        // Atributos Base
-        const getAttr = (id) => {
-            let val = parseInt(document.getElementById('v-' + id).value) || 0;
-            if (resq === 0 && (id === 'esp' || id === 'vig')) val += 1;
-            if (resq === 100 && (id === 'int' || id === 'car')) val += 1;
-            
-            // Bónus de Classe nos Atributos
-            if (charClass === 'sobrevivente' && id === 'agi') val += 1;
-            if (charClass === 'guerreiro' && id === 'for') val += 1;
-            if (charClass === 'arqueologo' && id === 'int') val += 1;
-
-            // Bónus de Especialização nos Atributos
-            if (charSpec === 'contrabandista' && id === 'agi') val += 1;
-            if (charSpec === 'explorador' && id === 'agi') val += 1;
-            if (charSpec === 'viajante' && id === 'agi') val += 1;
-            if (charSpec === 'campista' && id === 'car') val += 1;
-            if (charSpec === 'estudioso' && id === 'int') val += 2;
-            if (charSpec === 'barbaro') { if(id==='for') val+=1; if(id==='esp') val+=1; if(id==='int') val-=1; }
-            if (charSpec === 'besta') { if(id==='for') val+=2; if(id==='int') val-=2; }
-            if (charSpec === 'esgrimista') { if(id==='int') val+=1; if(id==='agi') val+=1; }
-            if (charSpec === 'cauteloso' && id === 'agi') val += 2;
-            if (charSpec === 'tanque' && id === 'vig') val += 2;
-            if (charSpec === 'manipulador') { if(id==='int') val+=1; if(id==='for') val-=1; if(id==='esp') val-=1; }
-            if (charSpec === 'agil') { if(id==='agi') val+=2; if(id==='for') val-=1; }
-            if (charSpec === 'feiticeiro' && id === 'esp') val += 2;
-            if (charSpec === 'mago') { if(id==='int') val+=1; if(id==='esp') val+=1; }
-            if (charSpec === 'paleontologo' && id === 'int') val += 1;
-            if (charSpec === 'clerigo') { if(id==='esp') val+=1; if(id==='car') val+=1; }
-            if (charSpec === 'domino' && id === 'car') val += 2;
-
-            return val;
-        };
-
-        const forca = getAttr('for'), agi = getAttr('agi'), int = getAttr('int'), 
-            esp = getAttr('esp'), vig = getAttr('vig'), car = getAttr('car');
-
-        let maxHP = (((vig + (forca / 2)) * 8) + 5);
-        let maxFM = ((esp) + (int * 2) + (car * 5));
-        let maxPC = ((agi + (int + esp) * 2) * 3);
-
-        // Bónus de Status Fixos
-        if (charClass === 'sobrevivente') { 
-            maxFM += int + esp; 
-            extraNotes.push("Sobrevivente: vasto conhecimento sobre a natureza");
-        }
-        if (charClass === 'guerreiro') { 
-            maxHP += forca * 2; 
-            extraNotes.push("Guerreiro: um cara bom de briga");
-        }
-        if (charClass === 'arqueologo') {
-            maxPC += int; 
-            extraNotes.push("Arqueólogo: pessoa curiosa, grande entusiasta da História do mundo desde os primórdios");
-        }
-
-        // Bónus de Especialização nos Status
-        if (charSpec === 'explorador') maxFM += 5;
-        if (charSpec === 'viajante') {
-            maxFM += 6;
-            extraNotes.push("Especialização: Viajante: pode viajar entre as 6 Muralhas livremente com autorização dos governantes");
-        }
-        if (charSpec === 'campista') maxHP -= forca - 2;
-        if (charSpec === 'estudioso') maxFM += 5;
-        if (charSpec === 'barbaro') maxHP += 10;
-        if (charSpec === 'besta') maxHP += 5;
-        if (charSpec === 'esgrimista') maxFM += 8;
-        if (charSpec === 'tanque') maxFM += 10;
-        if (charSpec === 'agil') maxHP -= 10;
-        if (charSpec === 'feiticeiro') { 
-            maxFM += 5; maxPC += 10;
-            extraNotes.push("Especialização: Feiticeiro: conectado com o mundo místico, pessoa que conjura magias com seu espírito aguçado");
-        }
-        if (charSpec === 'mago') {
-            maxPC += 5;
-            extraNotes.push("Especialização: Mago: um estudioso das artes arcanas, que utiliza seu conhecimento para manipular as forças ocultas do mundo");
-        }
-        if (charSpec === 'paleontologo') {
-            extraNotes.push("Especialização: Paleontólogo: sabe tudo sobre aquelas criaturas fora das Muralhas");
-        }
-        if (charSpec === 'clerigo') { maxPC += 5; maxFM += 5; }
-
-        document.getElementById('max_hp').innerText = maxHP;
-        document.getElementById('max_fm').innerText = maxFM;
-        document.getElementById('max_pc').innerText = maxPC;
-
-        let currentNotes = notesField.value.split('\n').filter(line => !line.startsWith("Sobrevivente:") && !line.startsWith("Guerreiro:") && !line.startsWith("Arqueólogo:") && !line.startsWith("Especialização:"));
-        notesField.value = extraNotes.concat(currentNotes).join('\n');
-
-        updateBars();
-    }
-
-    function rollSkill() {
-        const select = document.getElementById('skill-sel');
-        const skillVal = select.value; // ex: "agi" ou "for,agi"
-        const skillName = select.options[select.selectedIndex].getAttribute('data-name') || "Teste";
-        const charClass = document.getElementById('char-class').value;
-        const charSpec = document.getElementById('char-spec').value;
-        const resqVal = parseInt(document.getElementById('resq-num').value);
-        const diceBase = 20;
-
-        // --- LÓGICA DE QUANTIDADE DE DADOS (VANTAGEM) ---
-        let numDados = 1;
-
-        // Regra Arqueólogo: Todos os dados de INT rodam 2x
-        if (charClass === 'arqueologo' && skillVal.includes('int')) {
-            numDados = 2;
-        }
-
-        // Regras de Especialização (2x ou 3x)
-        if (charSpec === 'contrabandista' && skillName === 'Furtividade') numDados = 2;
-        if (charSpec === 'esgrimista' && skillName === 'Luta') numDados = 2;
-        if (charSpec === 'mago' && skillName === 'Arcanismo') numDados = 2;
-        
-        if (charSpec === 'cauteloso') {
-            if (skillName === 'Furtividade') numDados = 3;
-            if (skillName === 'Perseverança') numDados = 2;
-        }
-        
-        if (charSpec === 'manipulador' && (skillName === 'Furtividade' || skillName === 'Diplomacia')) numDados = 3;
-        if (charSpec === 'agil' && skillName === 'Esquiva') numDados = 3;
-        if (charSpec === 'estudioso' && (skillName === 'Medicina' || skillName === 'História')) numDados = 3;
-        if (charSpec === 'feiticeiro' && skillName === 'Misticismo') numDados = 3;
-        if (charSpec === 'clerigo' && skillName === 'Medicina') numDados = 3;
-        if (charSpec === 'domino' && skillName === 'Sorte') numDados = 3;
-
-        if (charSpec === 'campista') {
-            const campLista = ['Procurar', 'Escutar', 'Olfato', 'Sorte', 'Medicina', 'Prestidigitação', 'Instinto'];
-            if (campLista.includes(skillName)) numDados = 2;
-        }
-
-        // --- EXECUÇÃO DA ROLAGEM ---
-        let rolls = [];
-        for (let i = 0; i < numDados; i++) {
-            rolls.push(Math.floor(Math.random() * diceBase) + 1);
-        }
-        
-        // Pega o melhor resultado entre os dados rolados
-        let roll = Math.max(...rolls);
-
-        // --- CÁLCULO DOS ATRIBUTOS (Incluindo bônus de classe/espec/resquício) ---
-        function getAttr(key) {
-            let base = parseInt(document.getElementById('v-' + key.trim()).value) || 0;
-            
-            // Bônus de Resquício
-            if (resqVal === 0 && (key.trim() === 'esp' || key.trim() === 'for' || key.trim() === 'vig')) base += 1;
-            if (resqVal === 100 && (key.trim() === 'int' || key.trim() === 'car')) base += 1;
-            
-            // Bônus de Classe
-            if (charClass === 'sobrevivente' && key.trim() === 'agi') base += 1;
-            if (charClass === 'guerreiro' && key.trim() === 'for') base += 1;
-            if (charClass === 'arqueologo' && key.trim() === 'int') base += 1;
-
-            // Bônus de Especialização (Exemplos principais)
-            if (charSpec === 'contrabandista' && key.trim() === 'agi') base += 1;
-            if (charSpec === 'explorador' && key.trim() === 'agi') base += 1;
-            if (charSpec === 'viajante' && key.trim() === 'agi') base += 1;
-            if (charSpec === 'campista' && key.trim() === 'car') base += 1;
-            if (charSpec === 'estudioso' && key.trim() === 'int') base += 2;
-            if (charSpec === 'barbaro' && (key.trim() === 'for' || key.trim() === 'esp')) base += 1;
-            if (charSpec === 'besta' && key.trim() === 'for') base += 2;
-            if (charSpec === 'tanque' && key.trim() === 'vig') base += 2;
-            // Adicione outros bônus de atributo de especialização aqui se necessário
-
-            return base;
-        }
-
-        const attrKeys = skillVal ? skillVal.split(',') : [];
-        let sum = 0;
-        attrKeys.forEach(k => {
-            sum += (getAttr(k) - 1);
-        });
-
-        let total = (roll + sum);
-        let quality = (total / (diceBase + sum)) * 100;
-        let result = "";
-
-        // --- TABELA DE RESULTADOS ---
-        if (total <= 3) result = "💀 Desastre";
-        else if (total <= 6) result = "❌ Falha";
-        else if (total <= 10) result = "🟦 Simples";
-        else if (total <= 15) result = "👍 Normal";
-        else if (total <= 19) result = "😃 Bom";
-        else if (total === 20) result = "<b>☄️ Excelente</b>";
-        else result = "<b>🌌 Perfeito!</b>";
-
-        // --- EXIBIÇÃO ---
-        const dadosTxt = numDados > 1 ? `[${rolls.join(', ')}] (Melhor: ${roll})` : `${roll}`;
-        
-        document.getElementById('result-display').innerHTML = 
-            `> <strong>${skillName.toUpperCase()}</strong>: ${total} (${quality.toFixed(1)}%)\n` +
-            `> Dados: ${dadosTxt} (d20) + ${sum} (Soma Attr)\n` +
-            `> Resultado: ${result}`;
-    }
+    // --- SISTEMA DE PERSISTÊNCIA (URL) ---
 
     function saveToUrl() {
         const data = {
-            cls: document.getElementById('char-class').value,
-            spc: document.getElementById('char-spec').value,
             cn: document.getElementById('char-name').value,
             pn: document.getElementById('player-name').value,
+            cls: document.getElementById('char-class').value,
+            spc: document.getElementById('char-spec').value, // Captura o valor da especialização
             resq: document.getElementById('resq-num').value,
             chp: document.getElementById('curr-hp').value,
             cfm: document.getElementById('curr-fm').value,
@@ -820,39 +652,57 @@
             bru: document.getElementById('bru-text').value,
             not: document.getElementById('notes-text').value
         };
+        
         const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
         window.history.replaceState(null, null, "?sheet=" + encoded);
-        alert("Ficha sincronizada com a URL!");
+        
+        navigator.clipboard.writeText(window.location.href);
+        alert("Ficha sincronizada e URL copiada!");
     }
 
     window.onload = () => {
         const params = new URLSearchParams(window.location.search);
         const dataStr = params.get('sheet');
+        
         if (dataStr) {
             try {
                 const d = JSON.parse(decodeURIComponent(escape(atob(dataStr))));
-                document.getElementById('char-class').value = d.cls || "nenhuma";
-                document.getElementById('char-spec').value = d.spc || "nenhuma";
+                
+                // 1. Carrega os textos básicos e atributos
                 document.getElementById('char-name').value = d.cn || "";
                 document.getElementById('player-name').value = d.pn || "";
-                document.getElementById('v-for').value = d.f || 1;
-                document.getElementById('v-agi').value = d.a || 1;
-                document.getElementById('v-vig').value = d.v || 1;
-                document.getElementById('v-int').value = d.i || 1;
-                document.getElementById('v-esp').value = d.e || 1;
-                document.getElementById('v-car').value = d.c || 1;
-                document.getElementById('inv-text').value = d.inv || "";
-                document.getElementById('bru-text').value = d.bru || "";
-                document.getElementById('notes-text').value = d.not || "";
-                updateResquicios(d.resq || 50);
+                document.getElementById('v-for').value = d.f || 0;
+                document.getElementById('v-agi').value = d.a || 0;
+                document.getElementById('v-vig').value = d.v || 0;
+                document.getElementById('v-int').value = d.i || 0;
+                document.getElementById('v-esp').value = d.e || 0;
+                document.getElementById('v-car').value = d.c || 0;
                 document.getElementById('curr-hp').value = d.chp || 0;
                 document.getElementById('curr-fm').value = d.cfm || 0;
                 document.getElementById('curr-pc').value = d.cpc || 0;
-            } catch(e) { console.error("Erro ao carregar dados."); }
-        } else { updateResquicios(50); }
+                document.getElementById('inv-text').value = d.inv || "";
+                document.getElementById('bru-text').value = d.bru || "";
+                document.getElementById('notes-text').value = d.not || "";
+
+                // 2. Define a Classe
+                document.getElementById('char-class').value = d.cls || "nenhuma";
+
+                // 3. Define os Resquícios (isto vai disparar o updateSpecOptions internamente)
+                updateResquicios(d.resq || 50);
+                
+                // 4. AGORA, após a lista de specs ter sido montada pelo updateResquicios,
+                // forçamos o valor da especialização guardado.
+                if (d.spc) {
+                    document.getElementById('char-spec').value = d.spc;
+                }
+                
+            } catch(e) {
+                console.error("Erro ao carregar dados.");
+            }
+        }
+        updatePointsLabel();
         atualizarStatus();
     };
 </script>
-
 </body>
 </html>
