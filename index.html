@@ -5,238 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taurodia RPG</title>
     <link rel="icon" type="image/jpg" href="chifre.png">
-    <style>
-        body { 
-            background: #1a1a1a; 
-            color: #e0e0e0; 
-            font-family: sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 10px;
-            margin: 0;
-        }
-
-        .container { 
-            width: 100%; 
-            max-width: 800px; 
-            margin: 0 auto;
-            background: #262626; 
-            padding: 15px; 
-            border: 2px solid #ff6600; 
-            border-radius: 8px; 
-            box-sizing: border-box;
-        }
-
-        h2 { 
-            color: #ffcc00; 
-            border-bottom: 1px solid #444; 
-            padding-bottom: 5px; 
-            text-transform: uppercase; 
-            font-size: 1.1rem; 
-            margin-top: 25px; 
-        }
-
-        .grid-header { 
-            display: grid; 
-            grid-template-columns: 1fr; 
-            gap: 15px; 
-            margin-bottom: 20px; 
-        }
-
-        @media (min-width: 600px) {
-            .grid-header { grid-template-columns: 1fr 1fr; }
-            .container { padding: 25px; }
-        }
-
-        .field { display: flex; flex-direction: column; }
-        .field label { font-size: 0.8rem; color: #ff6600; font-weight: bold; }
-        input, textarea, select { 
-            background: #111; 
-            border: 1px solid #444; 
-            color: white; 
-            padding: 12px; 
-            border-radius: 4px; 
-            margin-top: 5px; 
-            outline: none; 
-            font-size: 16px; 
-        }
-
-        .resquicios-container { background: #111; padding: 15px; border-radius: 4px; border: 1px solid #444; margin: 15px 0; }
-        .resquicios-controls { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
-        #resq-slider { flex-grow: 1; cursor: pointer; accent-color: #ff6600; }
-        #resq-num { width: 60px; text-align: center; font-weight: bold; font-size: 1.1rem; }
-
-        .status-grid { 
-            display: grid; 
-            grid-template-columns: 1fr; 
-            gap: 10px; 
-            margin-top: 15px; 
-        }
-
-        @media (min-width: 450px) {
-            .status-grid { grid-template-columns: 1fr 1fr 1fr; }
-        }
-
-        .status-box { background: #111; padding: 10px; border-radius: 4px; border: 1px solid #444; text-align: center; }
-        .status-inputs { display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .status-inputs input { width: 60px; text-align: center; font-size: 1.1rem; }
-
-        .attributes { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-            margin-bottom: 25px;
-            width: 100%;
-        }
-
-        @media (min-width: 600px) {
-            .attributes { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        @media (min-width: 800px) {
-            .attributes { grid-template-columns: repeat(6, 1fr); }
-        }
-
-        .attr-box { 
-            background: rgba(17, 17, 17, 0.8); 
-            padding: 15px 10px; 
-            border-radius: 12px; 
-            border: 1px solid #444;
-            transition: transform 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        .attr-box:hover {
-            border-color: #ff6600;
-            transform: translateY(-3px);
-        }
-
-        .attr-box label {
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            color: #bbb;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .attr-controls {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 100px;
-        }
-
-        .attr-controls button {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 1px solid #ff6600;
-            background: transparent;
-            color: #ff6600;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            padding: 0;
-        }
-
-        .attr-controls button:hover {
-            background: #ff6600;
-            color: #000;
-        }
-
-        .attr-controls input {
-            width: 30px;
-            background: transparent !important;
-            border: none !important;
-            color: #ffcc00 !important;
-            font-size: 1.4rem !important;
-            font-weight: bold;
-            padding: 0 !important;
-            margin: 0 !important;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
-        }
-
-        .attr-controls input::-webkit-outer-spin-button,
-        .attr-controls input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .roller-grid, .dice-custom-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media (min-width: 600px) { .dice-custom-grid { grid-template-columns: 1fr 1fr 1fr; } }
-
-        .roller-section { background: #111; padding: 15px; border-radius: 4px; border: 1px solid #ffcc00; margin-bottom: 20px; }
-        #result-display, #custom-result-display { 
-            background: #000; 
-            color: #00ff00; 
-            padding: 15px; 
-            border-left: 5px solid #ff6600; 
-            font-family: monospace; 
-            margin: 15px 0; 
-            white-space: pre-line; 
-            min-height: 50px;
-            word-break: break-all; 
-        }
-
-        .text-areas { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
-        @media (min-width: 600px) { .text-areas { grid-template-columns: 1fr 1fr; } }
-
-        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; width: 100%; }
-        button { padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; border: none; border-radius: 4px; }
-        .btn-roll, .btn-custom { background: #ff6600; color: black; width: 100%; margin-top: 10px; }
-        .btn-save { background: #444; color: #ffcc00; border: 1px solid #ffcc00; }
-
-        .btn-fragmento {
-            background: #33ccff;
-            color: rgb(0, 0, 0);
-            width: 100%;
-            margin-top: 5px;
-            border: 1px solid #389ec0;
-            padding: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 4px;
-            transition: 0.1s;
-        }
-        .btn-fragmento:hover {
-            background: #2ba1c9;
-            transition: 0.2s;
-        }
-
-        .status-bar-container {
-            width: 100%;
-            height: 8px;
-            background: #000;
-            border-radius: 4px;
-            margin-top: 8px;
-            overflow: hidden;
-            border: 1px solid #444;
-        }
-
-        .status-bar-fill {
-            height: 100%;
-            width: 0%; 
-            transition: width 0.3s ease-in-out;
-        }
-
-        .bar-hp { background: #ff3333; box-shadow: 0 0 8px #ff3333; }
-        .bar-fm { background: #33ccff; box-shadow: 0 0 8px #33ccff; }
-        .bar-pc { background: #cc33ff; box-shadow: 0 0 8px #cc33ff; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body onload="updateSpecOptions()">
+<body>
 
 <div class="container">
     <div class="grid-header">
-        <div class="field"><label>NOME DO PERSONAGEM</label><input type="text" id="char-name" placeholder="Ex: Gerson Romildo da Silva"></div>
-        <div class="field"><label>JOGADOR</label><input type="text" id="player-name" placeholder="Ex: avestruzdapernalisa"></div>
+        <div class="field">
+            <label>NOME DO PERSONAGEM</label>
+            <input type="text" id="char-name" placeholder="Ex: Gerson Romildo da Silva">
+        </div>
+        <div class="field">
+            <label>JOGADOR</label>
+            <input type="text" id="player-name" placeholder="Ex: avestruzdapernalisa">
+        </div>
         
         <div class="field">
             <label>CLASSE</label>
@@ -245,10 +27,10 @@
                 <option value="sobrevivente">Sobrevivente</option>
                 <option value="guerreiro">Guerreiro</option>
                 <option value="arqueologo">Arqueólogo</option>
-                <option value="cientista">Cientista</option>
             </select>
         </div>
-        <div class="field">
+        
+        <div class="field" id="spec-field">
             <label>ESPECIALIZAÇÃO</label>
             <select id="char-spec" onchange="atualizarStatus()">
                 <option value="nenhuma">Selecione uma Classe primeiro</option>
@@ -257,7 +39,7 @@
     </div>
 
     <div class="resquicios-container">
-        <label style="font-size: 0.8rem; color: #ff6600; font-weight: bold;">RESQUÍCIOS: <span id="resq-label-val">50</span></label>
+        <label>RESQUÍCIOS: <span id="resq-label-val">50</span></label>
         <div class="resquicios-controls">
             <input type="range" id="resq-slider" min="0" max="100" value="50" oninput="updateResquicios(this.value)">
             <input type="number" id="resq-num" min="0" max="100" value="50" oninput="updateResquicios(this.value)">
@@ -267,25 +49,31 @@
     <div class="status-grid">
         <div class="status-box hp">
             <label style="color: #ff3333;">HP</label>
-            <div class="status-inputs"><input type="number" id="curr-hp" oninput="updateBars()"> / <span class="max-val-display" id="max_hp">20</span></div>
+            <div class="status-inputs">
+                <input type="number" id="curr-hp" oninput="updateBars()"> / <span class="max-val-display" id="max_hp">0</span>
+            </div>
             <div class="status-bar-container"><div id="bar-hp-fill" class="status-bar-fill bar-hp"></div></div>
         </div>
         <div class="status-box fm">
             <label style="color: #33ccff;">FM</label>
-            <div class="status-inputs"><input type="number" id="curr-fm" oninput="updateBars()"> / <span class="max-val-display" id="max_fm">10</span></div>
+            <div class="status-inputs">
+                <input type="number" id="curr-fm" oninput="updateBars()"> / <span class="max-val-display" id="max_fm">0</span>
+            </div>
             <div class="status-bar-container"><div id="bar-fm-fill" class="status-bar-fill bar-fm"></div></div>
         </div>
         <div class="status-box pc">
             <label style="color: #cc33ff;">PC</label>
-            <div class="status-inputs"><input type="number" id="curr-pc" oninput="updateBars()"> / <span class="max-val-display" id="max_pc">15</span></div>
+            <div class="status-inputs">
+                <input type="number" id="curr-pc" oninput="updateBars()"> / <span class="max-val-display" id="max_pc">0</span>
+            </div>
             <div class="status-bar-container"><div id="bar-pc-fill" class="status-bar-fill bar-pc"></div></div>
         </div>
     </div>
 
     <button class="btn-fragmento" onclick="rollFragmentoMental()">🔮 FRAGMENTO MENTAL</button>
-    <div id="fragmento-display" style="display:none; background: #000; color: #33ccff; padding: 10px; border-left: 5px solid #33ccff; font-family: monospace; margin-top: 10px; margin-bottom: 20px;"></div>
+    <div id="fragmento-display" style="display:none;"></div>
 
-    <h2 id="attr-title">Atributos: 10 pontos</h2>
+    <h2>Atributos: 10 pontos</h2>
     <div class="attributes">
         <div class="attr-box">
             <label>FOR</label>
@@ -352,8 +140,8 @@
                     <option value="car" data-name="Diplomacia">Diplomacia (CAR)</option>
                     <option value="esp" data-name="Perseverança">Perseverança (ESP)</option>
                     <option value="for,esp" data-name="Intimidação">Intimidação (FOR+ESP)</option>
-                    <option value="int" data-name="Escutar">Audição (INT)</option>
-                    <option value="int" data-name="Procurar">Visão (INT)</option>
+                    <option value="int" data-name="Escutar">Escutar (INT)</option>
+                    <option value="int" data-name="Procurar">Procurar (INT)</option>
                     <option value="esp" data-name="Olfato">Olfato (ESP)</option>
                     <option value="int" data-name="Tecnologia">Tecnologia (INT)</option>
                     <option value="int" data-name="História">História (INT)</option>
@@ -379,7 +167,7 @@
     </div>
 
     <h2>Dados Personalizados</h2>
-    <div style="background: #111; padding: 15px; border-radius: 4px; border: 1px solid #ffcc00; margin-bottom: 10px;">
+    <div class="custom-dice-container">
         <div class="dice-custom-grid">
             <div class="field">
                 <label>QUANTIDADE</label>
@@ -414,13 +202,13 @@
     <div id="custom-result-display">> Aguardando rolagem...</div>
 
     <div class="text-areas">
-        <div class="field"><label>INVENTÁRIO</label><textarea id="inv-text" placeholder="Armas, elixires, armaduras, etc."></textarea></div>
-        <div class="field"><label>BRUXARIA</label><textarea id="bru-text" placeholder="Rituais e conhecimentos arcanos."></textarea></div>
+        <div class="field"><label>INVENTÁRIO</label><textarea style="height: 150px;" id="inv-text" placeholder="Armas, elixires, armaduras, etc."></textarea></div>
+        <div class="field"><label>BRUXARIA</label><textarea style="height: 150px;" id="bru-text" placeholder="Rituais e conhecimentos arcanos."></textarea></div>
     </div>
 
     <div class="field" style="margin-top: 15px;">
         <label>ANOTAÇÕES</label>
-        <textarea id="notes-text" placeholder="Anotar coisas importantes ajudam a não se esquecer de pontos cruciais."></textarea>
+        <textarea style="height: 150px;" id="notes-text" placeholder="Anotar coisas importantes ajudam a não se esquecer de pontos cruciais."></textarea>
     </div>
 
     <div class="btn-group">
@@ -428,281 +216,6 @@
     </div>
 </div>
 
-<script>
-    const MAX_POINTS = 10;
-    const specsPorClasse = {
-        sobrevivente: [
-            { val: "contrabandista", nome: "Contrabandista" },
-            { val: "explorador", nome: "Explorador" },
-            { val: "viajante", nome: "Viajante" },
-            { val: "campista", nome: "Campista" },
-            { val: "estudioso", nome: "Estudioso" },
-            { val: "domino", nome: "Dominó" },
-            { val: "eremita", nome: "Eremita" },
-            { val: "cacador", nome: "Caçador" },
-            { val: "guia", nome: "Guia das Sombras" }
-        ],
-        guerreiro: [
-            { val: "barbaro", nome: "Bárbaro" },
-            { val: "besta", nome: "Besta" },
-            { val: "esgrimista", nome: "Esgrimista" },
-            { val: "cauteloso", nome: "Cauteloso" },
-            { val: "tanque", nome: "Tanque" },
-            { val: "manipulador", nome: "Manipulador" },
-            { val: "agil", nome: "Ágil" },
-            { val: "gladiador", nome: "Gladiador" },
-            { val: "carrasco", nome: "Carrasco" },
-            { val: "duelista", nome: "Duelista Arcano" }
-        ],
-        arqueologo: [
-            { val: "estudioso", nome: "Estudioso" },
-            { val: "feiticeiro", nome: "Feiticeiro" },
-            { val: "mago", nome: "Mago" },
-            { val: "paleontologo", nome: "Paleontólogo" },
-            { val: "clerigo", nome: "Clérigo" },
-            { val: "tradutor", nome: "Tradutor de Runas" },
-            { val: "curador", nome: "Curador de Relíquias" },
-            { val: "profeta", nome: "Profeta do Passado" }
-        ],
-        cientista: [
-            { val: "alquimista", nome: "Alquimista" },
-            { val: "engenheiro", nome: "Engenheiro de Cerco" },
-            { val: "medico", nome: "Médico de Campo" },
-            { val: "inventor", nome: "Inventor" },
-            { val: "biologo", nome: "Biólogo Viral" }
-        ]
-    };
-
-    // --- FUNÇÕES DE INTERFACE ---
-
-    function updateResquicios(val) {
-        val = Math.max(0, Math.min(100, val));
-        document.getElementById('resq-slider').value = val;
-        document.getElementById('resq-num').value = val;
-        const label = document.getElementById('resq-label-val');
-        label.innerText = val;
-
-        let r, g, b;
-        if (val < 50) { let ratio = val / 50; r = 255; g = 255 * ratio; b = 255 * ratio; }
-        else { let ratio = (val - 50) / 50; r = 255; g = 255; b = 255 * (1 - ratio); }
-        label.style.color = `rgb(${r}, ${g}, ${b})`;
-
-        updateSpecOptions(); 
-        atualizarStatus();
-    }
-
-    function updateSpecOptions() {
-        const classe = document.getElementById('char-class').value;
-        const resq = parseInt(document.getElementById('resq-num').value);
-        const specSelect = document.getElementById('char-spec');
-        const specField = specSelect.parentElement;
-
-        // Se estiver na zona neutra de resquícios, a especialização é desabilitada
-        if (resq > 25 && resq < 65) {
-            specField.style.display = 'none';
-            specSelect.value = "nenhuma";
-            return; 
-        }
-
-        specField.style.display = 'flex'; 
-        
-        // IMPORTANTE: Salva o valor que já estava selecionado antes de reconstruir a lista
-        const valorAntigo = specSelect.value;
-
-        specSelect.innerHTML = '<option value="nenhuma">Nenhuma</option>';
-        if (specsPorClasse[classe]) {
-            specsPorClasse[classe].forEach(s => {
-                const opt = document.createElement('option');
-                opt.value = s.val;
-                opt.innerHTML = s.nome;
-                specSelect.appendChild(opt);
-            });
-        }
-
-        // Tenta restaurar o valor antigo (se ele ainda existir na nova lista)
-        if (valorAntigo && valorAntigo !== "") {
-            specSelect.value = valorAntigo;
-        }
-    }
-
-    function updateBars() {
-        ['hp', 'fm', 'pc'].forEach(stat => {
-            const curr = parseInt(document.getElementById(`curr-${stat}`).value) || 0;
-            const max = parseInt(document.getElementById(`max_${stat}`).innerText) || 1;
-            const bar = document.getElementById(`bar-${stat}-fill`);
-            let percentage = Math.max(0, Math.min(100, (curr / max) * 100));
-            bar.style.width = percentage + "%";
-        });
-    }
-
-    function changeAttr(attr, delta) {
-        const input = document.getElementById('v-' + attr);
-        let val = parseInt(input.value) || 0;
-        let totalGasto = 0;
-        ['for','agi','vig','int','esp','car'].forEach(a => totalGasto += parseInt(document.getElementById('v-'+a).value) || 0);
-
-        if (delta > 0 && totalGasto < MAX_POINTS && val < 3) input.value = val + 1;
-        else if (delta < 0 && val > 0) input.value = val - 1;
-        
-        updatePointsLabel();
-        atualizarStatus();
-    }
-
-    function updatePointsLabel() {
-        let totalGasto = 0;
-        ['for','agi','vig','int','esp','car'].forEach(a => totalGasto += parseInt(document.getElementById('v-'+a).value) || 0);
-        document.getElementById('attr-title').innerText = `Atributos: ${MAX_POINTS - totalGasto} pontos`;
-    }
-
-    function atualizarStatus() {
-        const resq = parseInt(document.getElementById('resq-num').value);
-        const charClass = document.getElementById('char-class').value;
-        const charSpec = document.getElementById('char-spec').value;
-        
-        const getAttr = (id) => {
-            let val = parseInt(document.getElementById('v-' + id).value) || 0;
-            if (resq === 0 && (id === 'esp' || id === 'vig')) val += 1;
-            if (resq === 100 && (id === 'int' || id === 'car')) val += 1;
-            if (charClass === 'sobrevivente' && id === 'agi') val += 1;
-            if (charClass === 'guerreiro' && id === 'for') val += 1;
-            if (charClass === 'arqueologo' && id === 'int') val += 1;
-            if (charClass === 'cientista' && id === 'int') val += 1;
-            if (charSpec === 'contrabandista' && id === 'agi') val += 1;
-            if (charSpec === 'estudioso' && id === 'int') val += 2;
-            if (charSpec === 'tanque' && id === 'vig') val += 2;
-            return val;
-        };
-
-        const f = getAttr('for'), a = getAttr('agi'), i = getAttr('int'), e = getAttr('esp'), v = getAttr('vig'), c = getAttr('car');
-
-        let maxHP = 8 + ((v + (f / 2)) * 8);
-        let maxFM = 5 + (e + (i * 2) + (c * 5));
-        let maxPC = 2 + ((a + (i + e) * 2) * 3);
-
-        if (charClass === 'sobrevivente') maxFM += i + e;
-        if (charClass === 'guerreiro') maxHP += f * 2;
-        if (charSpec === 'barbaro') maxHP += 10;
-
-        document.getElementById('max_hp').innerText = Math.floor(maxHP);
-        document.getElementById('max_fm').innerText = Math.floor(maxFM);
-        document.getElementById('max_pc').innerText = Math.floor(maxPC);
-        updateBars();
-    }
-
-    // --- ROLAGENS ---
-
-    function rollSkill() {
-        const select = document.getElementById('skill-sel');
-        const skillVal = select.value; 
-        const skillName = select.options[select.selectedIndex].getAttribute('data-name') || "Teste";
-        const diceBase = 50;
-
-        let roll = Math.floor(Math.random() * diceBase) + 1;
-        const attrKeys = skillVal ? skillVal.split(',') : [];
-        let sum = 0;
-        attrKeys.forEach(k => {
-            sum += parseInt(document.getElementById('v-' + k.trim()).value) || 0;
-        });
-
-        let total = roll + sum;
-        let result = "";
-        if (total <= 7) result = "💀 Desastre";
-        else if (total <= 15) result = "❌ Falha";
-        else if (total <= 25) result = "😥 Quase";
-        else if (total <= 37) result = "👍 Normal";
-        else if (total <= 47) result = "😃 Bom";
-        else if (total === 50) result = "<b>☄️ Excelente</b>";
-        else result = "<b>🌌 Perfeito!</b>";
-
-        document.getElementById('result-display').innerHTML = `> <strong>${skillName.toUpperCase()}</strong>: ${total}\n> Dado: ${roll} + Mod: ${sum}\n> Resultado: ${result}`;
-    }
-
-    function rollCustomDice() {
-        const qty = parseInt(document.getElementById('custom-qty').value) || 1;
-        const faces = parseInt(document.getElementById('custom-faces').value) || 20;
-        const mode = document.getElementById('custom-mode').value;
-        let rolls = [];
-        for (let i = 0; i < qty; i++) rolls.push(Math.floor(Math.random() * faces) + 1);
-
-        let finalResult = (mode === "soma") ? rolls.reduce((a, b) => a + b, 0) : 
-                         (mode === "vantagem") ? Math.max(...rolls) : Math.min(...rolls);
-
-        document.getElementById('custom-result-display').innerHTML = `> Resultado: ${finalResult}\n> Dados: [${rolls.join(', ')}]`;
-    }
-
-    // --- SISTEMA DE PERSISTÊNCIA (URL) ---
-
-    function saveToUrl() {
-        const data = {
-            cn: document.getElementById('char-name').value,
-            pn: document.getElementById('player-name').value,
-            cls: document.getElementById('char-class').value,
-            spc: document.getElementById('char-spec').value, // Captura o valor da especialização
-            resq: document.getElementById('resq-num').value,
-            chp: document.getElementById('curr-hp').value,
-            cfm: document.getElementById('curr-fm').value,
-            cpc: document.getElementById('curr-pc').value,
-            f: document.getElementById('v-for').value,
-            a: document.getElementById('v-agi').value,
-            v: document.getElementById('v-vig').value,
-            i: document.getElementById('v-int').value,
-            e: document.getElementById('v-esp').value,
-            c: document.getElementById('v-car').value,
-            inv: document.getElementById('inv-text').value,
-            bru: document.getElementById('bru-text').value,
-            not: document.getElementById('notes-text').value
-        };
-        
-        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-        window.history.replaceState(null, null, "?sheet=" + encoded);
-        
-        navigator.clipboard.writeText(window.location.href);
-        alert("Ficha sincronizada e URL copiada!");
-    }
-
-    window.onload = () => {
-        const params = new URLSearchParams(window.location.search);
-        const dataStr = params.get('sheet');
-        
-        if (dataStr) {
-            try {
-                const d = JSON.parse(decodeURIComponent(escape(atob(dataStr))));
-                
-                // 1. Carrega os textos básicos e atributos
-                document.getElementById('char-name').value = d.cn || "";
-                document.getElementById('player-name').value = d.pn || "";
-                document.getElementById('v-for').value = d.f || 0;
-                document.getElementById('v-agi').value = d.a || 0;
-                document.getElementById('v-vig').value = d.v || 0;
-                document.getElementById('v-int').value = d.i || 0;
-                document.getElementById('v-esp').value = d.e || 0;
-                document.getElementById('v-car').value = d.c || 0;
-                document.getElementById('curr-hp').value = d.chp || 0;
-                document.getElementById('curr-fm').value = d.cfm || 0;
-                document.getElementById('curr-pc').value = d.cpc || 0;
-                document.getElementById('inv-text').value = d.inv || "";
-                document.getElementById('bru-text').value = d.bru || "";
-                document.getElementById('notes-text').value = d.not || "";
-
-                // 2. Define a Classe
-                document.getElementById('char-class').value = d.cls || "nenhuma";
-
-                // 3. Define os Resquícios (isto vai disparar o updateSpecOptions internamente)
-                updateResquicios(d.resq || 50);
-                
-                // 4. AGORA, após a lista de specs ter sido montada pelo updateResquicios,
-                // forçamos o valor da especialização guardado.
-                if (d.spc) {
-                    document.getElementById('char-spec').value = d.spc;
-                }
-                
-            } catch(e) {
-                console.error("Erro ao carregar dados.");
-            }
-        }
-        updatePointsLabel();
-        atualizarStatus();
-    };
-</script>
+<script src="script.js"></script>
 </body>
 </html>
