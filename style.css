@@ -254,3 +254,263 @@ button { padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppe
 .bar-hp { background: #ff3333; box-shadow: 0 0 8px #ff3333; }
 .bar-fm { background: #33ccff; box-shadow: 0 0 8px #33ccff; }
 .bar-pc { background: #cc33ff; box-shadow: 0 0 8px #cc33ff; }
+
+#url-display {
+    background: #000; 
+    color: #33ccff; 
+    padding: 15px; 
+    border-left: 5px solid #33ccff; 
+    font-family: monospace; 
+    margin-top: 15px;
+    margin-bottom: 10px;
+    white-space: pre-line; 
+    min-height: 50px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+/* Container que envelopa o botão de -, o número e o botão de + */
+.status-control {
+    display: inline-flex;
+    align-items: center;
+    background: #000000;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Estilização dos botões de diminuir e aumentar */
+.status-btn {
+    background: transparent;
+    color: currentColor;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+/* Efeito invertido ao passar o mouse por cima do botão (Hover) */
+.status-btn:hover {
+    background: currentColor;
+    color: #000000;
+}
+
+/* Exibição central do número do status atual */
+.status-number {
+    font-family: monospace;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffffff;
+    min-width: 40px;
+    text-align: center;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    height: 32px;
+    line-height: 32px;
+}
+
+/* ============================================================================
+   🎨 ESTILIZAÇÃO COMPLETA DOS CARDS DE STATUS (ESTILO CRIS)
+   ============================================================================ */
+
+/* Container da Grid Principal */
+.grid-status {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .grid-status {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Base do Card de Status */
+.status-card {
+    background: #111111;
+    border: 2px solid #333333;
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.status-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Cores e Brilhos Neon Temáticos por Atributo */
+.card-hp { 
+    border-color: #ff3333; 
+    --status-color: #ff3333;
+    --status-bg-glow: rgba(255, 51, 51, 0.1);
+}
+.card-pc { 
+    border-color: #00ff66; 
+    --status-color: #00ff66;
+    --status-bg-glow: rgba(0, 255, 102, 0.08);
+}
+.card-fm { 
+    border-color: #33ccff; 
+    --status-color: #33ccff;
+    --status-bg-glow: rgba(51, 204, 255, 0.1);
+}
+
+.status-card {
+    box-shadow: inset 0 0 10px var(--status-bg-glow), 0 4px 15px rgba(0, 0, 0, 0.6);
+}
+
+/* Cabeçalho do Card (Nome e Números) */
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 8px;
+}
+
+.status-label {
+    font-family: monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: var(--status-color);
+    text-shadow: 0 0 5px var(--status-bg-glow);
+}
+
+.status-values {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    font-weight: bold;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.curr-val {
+    color: #ffffff;
+    font-size: 1.4rem;
+}
+
+.divider {
+    color: #555555;
+    font-size: 1rem;
+}
+
+.max-val {
+    color: #888888;
+    font-size: 1rem;
+}
+
+/* Linha e Bloco de Controle dos Botões */
+.status-control-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+
+.status-control {
+    display: inline-flex;
+    align-items: center;
+    background: #050505;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+/* Botões Estilo CRIS */
+.status-btn {
+    background: transparent;
+    color: #aaaaaa;
+    border: none;
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: bold;
+    width: 36px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.status-btn.btn-heavy {
+    color: #666666;
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.status-btn:hover {
+    background: var(--status-color);
+    color: #000000 !important;
+    font-weight: calc(bold + 100);
+    box-shadow: 0 0 8px var(--status-color);
+}
+
+/* Indicador central (ícone entre os botões) */
+.control-indicator {
+    padding: 0 6px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    border-left: 1px solid #222222;
+    border-right: 1px solid #222222;
+    background: #0a0a0a;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+/* Container da Barra de Progresso */
+.status-bar-container {
+    width: 100%;
+    height: 10px;
+    background: #090909;
+    border: 1px solid #222222;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Preenchimento Dinâmico */
+.status-bar-fill {
+    height: 100%;
+    width: 0%; /* Controlado via JS */
+    border-radius: 2px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, var(--status-color) 0%, #ffffff 180%);
+    box-shadow: 0 0 10px var(--status-color);
+    position: relative;
+}
+
+/* Reflexo de vidro tecnológico sobre as barras */
+.status-bar-glare {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 50%;
+    background: linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0));
+    pointer-events: none;
+}

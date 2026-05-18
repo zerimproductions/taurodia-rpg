@@ -26,7 +26,7 @@
                 <option value="nenhuma">Nenhuma</option>
                 <option value="sobrevivente">Sobrevivente</option>
                 <option value="guerreiro">Guerreiro</option>
-                <option value="arqueologo">Arqueólogo</option>
+                <option value="erudito">Erudito</option>
             </select>
         </div>
         
@@ -46,34 +46,90 @@
         </div>
     </div>
 
-    <div class="status-grid">
-        <div class="status-box hp">
-            <label style="color: #ff3333;">HP</label>
-            <div class="status-inputs">
-                <input type="number" id="curr-hp" oninput="updateBars()"> / <span class="max-val-display" id="max_hp">0</span>
+    <div class="grid-status">
+        <div class="status-card card-hp">
+            <div class="status-header">
+                <div class="status-label">VIDA (HP)</div>
+                <div class="status-values">
+                    <span class="curr-val" id="curr-hp-text">0</span>
+                    <span class="divider">/</span>
+                    <span class="max-val" id="max_hp">100</span>
+                </div>
             </div>
-            <div class="status-bar-container"><div id="bar-hp-fill" class="status-bar-fill bar-hp"></div></div>
+            
+            <div class="status-control-row">
+                <div class="status-control">
+                    <button class="status-btn btn-heavy" onclick="changeStatus('hp', -5)">-5</button>
+                    <button class="status-btn" onclick="changeStatus('hp', -1)">-1</button>
+                    <span class="control-indicator">📊</span>
+                    <button class="status-btn" onclick="changeStatus('hp', 1)">+1</button>
+                    <button class="status-btn btn-heavy" onclick="changeStatus('hp', 5)">+5</button>
+                </div>
+            </div>
+            
+            <div class="status-bar-container">
+                <div class="status-bar-fill" id="bar-hp-fill"></div>
+                <div class="status-bar-glare"></div>
+            </div>
         </div>
-        <div class="status-box fm">
-            <label style="color: #33ccff;">FM</label>
-            <div class="status-inputs">
-                <input type="number" id="curr-fm" oninput="updateBars()"> / <span class="max-val-display" id="max_fm">0</span>
+
+        <div class="status-card card-pc">
+            <div class="status-header">
+                <div class="status-label">PONTOS DE CONJURAÇÃO (PC)</div>
+                <div class="status-values">
+                    <span class="curr-val" id="curr-pc-text">0</span>
+                    <span class="divider">/</span>
+                    <span class="max-val" id="max_pc">100</span>
+                </div>
             </div>
-            <div class="status-bar-container"><div id="bar-fm-fill" class="status-bar-fill bar-fm"></div></div>
+            
+            <div class="status-control-row">
+                <div class="status-control">
+                    <button class="status-btn btn-heavy" onclick="changeStatus('pc', -5)">-5</button>
+                    <button class="status-btn" onclick="changeStatus('pc', -1)">-1</button>
+                    <span class="control-indicator">🧙‍♂️</span>
+                    <button class="status-btn" onclick="changeStatus('pc', 1)">+1</button>
+                    <button class="status-btn btn-heavy" onclick="changeStatus('pc', 5)">+5</button>
+                </div>
+            </div>
+            
+            <div class="status-bar-container">
+                <div class="status-bar-fill" id="bar-pc-fill"></div>
+                <div class="status-bar-glare"></div>
+            </div>
         </div>
-        <div class="status-box pc">
-            <label style="color: #cc33ff;">PC</label>
-            <div class="status-inputs">
-                <input type="number" id="curr-pc" oninput="updateBars()"> / <span class="max-val-display" id="max_pc">0</span>
+
+        <div class="status-card card-fm">
+            <div class="status-header">
+                <div class="status-label">FRAGMENTO MENTAL (FM)</div>
+                <div class="status-values">
+                    <span class="curr-val" id="curr-fm-text">0</span>
+                    <span class="divider">/</span>
+                    <span class="max-val" id="max_fm">100</span>
+                </div>
             </div>
-            <div class="status-bar-container"><div id="bar-pc-fill" class="status-bar-fill bar-pc"></div></div>
+            
+            <div class="status-control-row">
+                <div class="status-control">
+                    <button class="status-btn btn-heavy" onclick="changeStatus('fm', -5)">-5</button>
+                    <button class="status-btn" onclick="changeStatus('fm', -1)">-1</button>
+                    <span class="control-indicator">🌌</span>
+                    <button class="status-btn" onclick="changeStatus('fm', 1)">+1</button>
+                    <button class="status-btn btn-heavy" onclick="changeStatus('fm', 5)">+5</button>
+                </div>
+            </div>
+            
+            <div class="status-bar-container">
+                <div class="status-bar-fill" id="bar-fm-fill"></div>
+                <div class="status-bar-glare"></div>
+            </div>
         </div>
     </div>
 
     <button class="btn-fragmento" onclick="rollFragmentoMental()">🔮 FRAGMENTO MENTAL</button>
     <div id="fragmento-display" style="display:none;"></div>
 
-    <h2>Atributos: 10 pontos</h2>
+    <h2>Atributos: <span id="pontos-restantes">10</span> pontos</h2>
     <div class="attributes">
         <div class="attr-box">
             <label>FOR</label>
@@ -214,6 +270,8 @@
     <div class="btn-group">
         <button class="btn-save" onclick="saveToUrl()">Sincronizar na URL</button>
     </div>
+
+    <div id="url-display" style="display:none;"></div>
 </div>
 
 <script src="script.js"></script>
